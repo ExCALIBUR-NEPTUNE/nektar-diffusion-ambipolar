@@ -35,6 +35,6 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: dmoxey/nektar-driftwave:latest
+          tags: dmoxey/nektar-diffusion:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
