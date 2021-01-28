@@ -137,7 +137,7 @@ void UnsteadyDiffusion::DoOdeProjection(
     const NekDouble time)
 {
     int i;
-    int nvariables = inarray.num_elements();
+    int nvariables = inarray.size();
     SetBoundaryConditions(time);
 
     Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
@@ -162,7 +162,7 @@ void UnsteadyDiffusion::DoImplicitSolve(
 
     StdRegions::ConstFactorMap factors;
 
-    int nvariables = inarray.num_elements();
+    int nvariables = inarray.size();
     int npoints    = m_fields[0]->GetNpoints();
     factors[StdRegions::eFactorLambda] = 1.0 / lambda;
 
@@ -187,7 +187,6 @@ void UnsteadyDiffusion::DoImplicitSolve(
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(outarray[i],
                                m_fields[i]->UpdateCoeffs(),
-                               NullFlagList,
                                factors,
                                m_varcoeff);
 

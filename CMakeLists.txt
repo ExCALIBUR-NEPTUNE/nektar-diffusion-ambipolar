@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5.1)
 
-PROJECT(DriftWaveSolver)
+PROJECT(DiffusionSolver)
 
 # Nektar++ requires C++11.
 SET(CMAKE_CXX_STANDARD 11)
@@ -14,7 +14,6 @@ ENDIF()
 
 # Find Nektar++
 FIND_PACKAGE(Nektar++ REQUIRED)
-ADD_DEFINITIONS(${NEKTAR++_DEFINITIONS})
 INCLUDE_DIRECTORIES(SYSTEM ${NEKTAR++_INCLUDE_DIRS} ${NEKTAR++_TP_INCLUDE_DIRS})
 LINK_DIRECTORIES(${NEKTAR++_LIBRARY_DIRS} ${NEKTAR++_TP_LIBRARY_DIRS})
 MESSAGE(STATUS "Found Nektar++: version ${NEKTAR++_VERSION}")
@@ -23,11 +22,14 @@ MESSAGE(STATUS "Found Nektar++: version ${NEKTAR++_VERSION}")
 SET(CMAKE_INSTALL_RPATH "${NEKTAR++_LIBRARY_DIRS}")
 
 # Add source files.
-ADD_EXECUTABLE(DriftWaveSolver
-    src/DriftWaveSolver.cpp
-    src/DriftWaveSystem.cpp
+ADD_EXECUTABLE(DiffusionSolver
+    src/DiffusionSolver.cpp
+    src/UnsteadyDiffusion.cpp
+    src/SteadyDiffusion.cpp
     )
 
 # Add target link libraries.
-TARGET_LINK_LIBRARIES(DriftWaveSolver ${NEKTAR++_LIBRARIES} ${NEKTAR++_TP_LIBRARIES})
-INSTALL(TARGETS DriftWaveSolver DESTINATION ${CMAKE_INSTALL_PREFIX})
+TARGET_LINK_LIBRARIES(DiffusionSolver ${NEKTAR++_LIBRARIES} ${NEKTAR++_TP_LIBRARIES})
+INSTALL(TARGETS DiffusionSolver DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+TARGET_COMPILE_DEFINITIONS(DiffusionSolver PUBLIC ${NEKTAR++_DEFINITIONS})
