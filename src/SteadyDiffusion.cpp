@@ -78,15 +78,12 @@ void SteadyDiffusion::v_InitObject()
 
     // Set up variable coefficients
     NekDouble ct = cos(m_theta), st = sin(m_theta);
-    for (int i = 0; i < nq; ++i)
-    {
-        NekDouble d00 = (m_kpar - m_kperp) * m_B * m_B * ct * ct + m_kperp;
-        NekDouble d01 = (m_kpar - m_kperp) * m_B * m_B * ct * st;
-        NekDouble d11 = (m_kpar - m_kperp) * m_B * m_B * st * st + m_kperp;
-        m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-        m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-        m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
-    }
+    NekDouble d00 = (m_kpar - m_kperp) * m_B * m_B * ct * ct + m_kperp;
+    NekDouble d01 = (m_kpar - m_kperp) * m_B * m_B * ct * st;
+    NekDouble d11 = (m_kpar - m_kperp) * m_B * m_B * st * st + m_kperp;
+    m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+    m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+    m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
 
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
              "Only continuous Galerkin discretisation supported.");
