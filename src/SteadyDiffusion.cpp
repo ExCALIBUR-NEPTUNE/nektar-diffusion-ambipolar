@@ -78,9 +78,9 @@ void SteadyDiffusion::v_InitObject()
 
     // Set up variable coefficients
     NekDouble ct = cos(m_theta), st = sin(m_theta);
-    NekDouble d00 = (m_kpar - m_kperp) * m_B * m_B * ct * ct + m_kperp;
-    NekDouble d01 = (m_kpar - m_kperp) * m_B * m_B * ct * st;
-    NekDouble d11 = (m_kpar - m_kperp) * m_B * m_B * st * st + m_kperp;
+    NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
+    NekDouble d01 = (m_kpar - m_kperp) * ct * st;
+    NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
     m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
     m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
     m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
@@ -110,7 +110,7 @@ void SteadyDiffusion::v_DoSolve()
 
     factors[StdRegions::eFactorLambda] = 0.0;
 
-    for (int i = 0; i < m_fields.size(); ++i)
+    for (int i = 0; i < m_fields.num_elements(); ++i)
     {
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
         Vmath::Zero(m_fields[i]->GetNpoints(), m_fields[i]->UpdatePhys(), 1);
@@ -118,6 +118,7 @@ void SteadyDiffusion::v_DoSolve()
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
                                m_fields[i]->UpdateCoeffs(),
+			       NullFlagList,
                                factors,
                                m_varcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
