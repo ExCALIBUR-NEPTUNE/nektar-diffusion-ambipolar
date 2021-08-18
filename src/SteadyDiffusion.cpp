@@ -65,7 +65,6 @@ namespace Nektar
         m_session->LoadParameter("k_par", m_kpar, 100.0);
         m_session->LoadParameter("k_perp", m_kperp, 1);
         m_session->LoadParameter("theta", m_theta, 5.0);
-        m_session->LoadParameter("B", m_B, 1.0);
 
         // Convert to radians.
         m_theta *= -M_PI/180.0;

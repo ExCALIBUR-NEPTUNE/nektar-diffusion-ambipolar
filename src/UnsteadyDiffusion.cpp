@@ -74,7 +74,6 @@ namespace Nektar
         m_session->LoadParameter("k_par",   m_kpar,    1000.0);
         m_session->LoadParameter("k_perp",  m_kperp,   1.0);
         m_session->LoadParameter("theta",   m_theta,   0.0);
-        m_session->LoadParameter("B", 	    m_B,       1.0);
         m_session->LoadParameter("N",       m_N,       1e18);
         m_session->LoadParameter("epsilon", m_epsilon, 1.0);
 
