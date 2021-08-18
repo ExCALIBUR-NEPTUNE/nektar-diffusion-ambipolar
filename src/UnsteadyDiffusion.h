@@ -89,10 +89,11 @@ namespace Nektar
             NekDouble lambda);
 
     private:
-        NekDouble m_B;
         NekDouble m_kperp;
         NekDouble m_kpar;
         NekDouble m_theta;
+ 	NekDouble m_N;
+	NekDouble m_epsilon;
         StdRegions::VarCoeffMap m_varcoeff;
     };
 }

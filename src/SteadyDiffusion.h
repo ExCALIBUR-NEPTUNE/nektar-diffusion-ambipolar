@@ -74,7 +74,6 @@ protected:
     virtual void v_DoSolve();
 
 private:
-    NekDouble m_B;
     NekDouble m_kperp;
     NekDouble m_kpar;
     NekDouble m_theta;
