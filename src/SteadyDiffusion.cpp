@@ -43,87 +43,84 @@ using namespace std;
 
 namespace Nektar
 {
-
-string SteadyDiffusion::className = GetEquationSystemFactory().
+    string SteadyDiffusion::className = GetEquationSystemFactory().
     RegisterCreatorFunction("SteadyDiffusion", SteadyDiffusion::create);
 
-SteadyDiffusion::SteadyDiffusion(
+    SteadyDiffusion::SteadyDiffusion(
     const LibUtilities::SessionReaderSharedPtr& pSession,
     const SpatialDomains::MeshGraphSharedPtr& pGraph)
     : EquationSystem(pSession, pGraph)
-{
-}
-
-/**
- * @brief Initialisation object for the unsteady diffusion problem.
- */
-void SteadyDiffusion::v_InitObject()
-{
-    EquationSystem::v_InitObject();
-
-    int npoints = m_fields[0]->GetNpoints();
-
-    m_session->LoadParameter("k_par", m_kpar, 100.0);
-    m_session->LoadParameter("k_perp", m_kperp, 1);
-    m_session->LoadParameter("theta", m_theta, 5.0);
-    m_session->LoadParameter("B", m_B, 1.0);
-
-    // Convert to radians.
-    m_theta *= -M_PI/180.0;
-
-    Array<OneD, NekDouble> xc(npoints), yc(npoints);
-    m_fields[0]->GetCoords(xc, yc);
-
-    int nq = m_fields[0]->GetNpoints();
-
-    // Set up variable coefficients
-    NekDouble ct = cos(m_theta), st = sin(m_theta);
-    NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
-    NekDouble d01 = (m_kpar - m_kperp) * ct * st;
-    NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
-    m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-    m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-    m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
-
-    ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
-             "Only continuous Galerkin discretisation supported.");
-}
-
-/**
- * @brief Unsteady diffusion problem destructor.
- */
-SteadyDiffusion::~SteadyDiffusion()
-{
-}
-
-void SteadyDiffusion::v_GenerateSummary(SummaryList& s)
-{
-    EquationSystem::v_GenerateSummary(s);
-}
-
-/**
- * @brief Implicit solution of the unsteady diffusion problem.
- */
-void SteadyDiffusion::v_DoSolve()
-{
-    StdRegions::ConstFactorMap factors;
-
-    factors[StdRegions::eFactorLambda] = 0.0;
-
-    for (int i = 0; i < m_fields.num_elements(); ++i)
     {
-        Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
-        Vmath::Zero(m_fields[i]->GetNpoints(), m_fields[i]->UpdatePhys(), 1);
-
-        // Solve a system of equations with Helmholtz solver
-        m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                               m_fields[i]->UpdateCoeffs(),
-			       NullFlagList,
-                               factors,
-                               m_varcoeff);
-        m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
-                              m_fields[i]->UpdatePhys());
     }
-}
 
+    /**
+    * @brief Initialisation object for the unsteady diffusion problem.
+    */
+    void SteadyDiffusion::v_InitObject()
+    {
+        EquationSystem::v_InitObject();
+
+        int npoints = m_fields[0]->GetNpoints();
+
+        m_session->LoadParameter("k_par", m_kpar, 100.0);
+        m_session->LoadParameter("k_perp", m_kperp, 1);
+        m_session->LoadParameter("theta", m_theta, 5.0);
+        m_session->LoadParameter("B", m_B, 1.0);
+
+        // Convert to radians.
+        m_theta *= -M_PI/180.0;
+
+        Array<OneD, NekDouble> xc(npoints), yc(npoints);
+        m_fields[0]->GetCoords(xc, yc);
+
+        int nq = m_fields[0]->GetNpoints();
+
+        // Set up variable coefficients
+        NekDouble ct = cos(m_theta), st = sin(m_theta);
+        NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
+        NekDouble d01 = (m_kpar - m_kperp) * ct * st;
+        NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
+        m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+        m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+        m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+
+        ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
+                 "Only continuous Galerkin discretisation supported.");
+    }
+
+    /**
+    * @brief Unsteady diffusion problem destructor.
+    */
+    SteadyDiffusion::~SteadyDiffusion()
+    {
+    }
+
+    void SteadyDiffusion::v_GenerateSummary(SummaryList& s)
+    {
+        EquationSystem::v_GenerateSummary(s);
+    }
+
+    /**
+    * @brief Implicit solution of the unsteady diffusion problem.
+    */
+    void SteadyDiffusion::v_DoSolve()
+    {
+        StdRegions::ConstFactorMap factors;
+        factors[StdRegions::eFactorLambda] = 0.0;
+
+        for (int i = 0; i < m_fields.num_elements(); ++i)
+        {
+            Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
+            Vmath::Zero(m_fields[i]->GetNpoints(), m_fields[i]->UpdatePhys(), 1);
+
+            // Solve a system of equations with Helmholtz solver
+            m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
+                                   m_fields[i]->UpdateCoeffs(),
+		  	           NullFlagList,
+                                   factors,
+                                   m_varcoeff);
+            m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
+                                  m_fields[i]->UpdatePhys());
+        }
+    }
 }
