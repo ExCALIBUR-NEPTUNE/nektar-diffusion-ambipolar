@@ -42,43 +42,42 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-
-class SteadyDiffusion : public EquationSystem
-{
-public:
-    friend class MemoryManager<SteadyDiffusion>;
-
-    /// Creates an instance of this class
-    static EquationSystemSharedPtr create(
-        const LibUtilities::SessionReaderSharedPtr& pSession,
-        const SpatialDomains::MeshGraphSharedPtr& pGraph)
+    class SteadyDiffusion : public EquationSystem
     {
-        EquationSystemSharedPtr p = MemoryManager<SteadyDiffusion>
-            ::AllocateSharedPtr(pSession, pGraph);
-        p->InitObject();
-        return p;
-    }
-    /// Name of class
-    static std::string className;
+    public:
+        friend class MemoryManager<SteadyDiffusion>;
 
-    /// Destructor
-    virtual ~SteadyDiffusion();
+        /// Creates an instance of this class
+        static EquationSystemSharedPtr create(
+            const LibUtilities::SessionReaderSharedPtr& pSession,
+            const SpatialDomains::MeshGraphSharedPtr& pGraph)
+        {
+            EquationSystemSharedPtr p = MemoryManager<SteadyDiffusion>
+                ::AllocateSharedPtr(pSession, pGraph);
+            p->InitObject();
+            return p;
+        }
+        /// Name of class
+        static std::string className;
 
-protected:
-    SteadyDiffusion(
-        const LibUtilities::SessionReaderSharedPtr& pSession,
-        const SpatialDomains::MeshGraphSharedPtr& pGraph);
+        /// Destructor
+        virtual ~SteadyDiffusion();
 
-    virtual void v_InitObject();
-    virtual void v_GenerateSummary(SolverUtils::SummaryList& s);
-    virtual void v_DoSolve();
+    protected:
+        SteadyDiffusion(
+            const LibUtilities::SessionReaderSharedPtr& pSession,
+            const SpatialDomains::MeshGraphSharedPtr& pGraph);
 
-private:
-    NekDouble m_kperp;
-    NekDouble m_kpar;
-    NekDouble m_theta;
-    StdRegions::VarCoeffMap m_varcoeff;
-};
+        virtual void v_InitObject();
+        virtual void v_GenerateSummary(SolverUtils::SummaryList& s);
+        virtual void v_DoSolve();
+
+    private:
+        NekDouble m_kperp;
+        NekDouble m_kpar;
+        NekDouble m_theta;
+        StdRegions::VarCoeffMap m_varcoeff;
+    };
 }
 
 #endif
