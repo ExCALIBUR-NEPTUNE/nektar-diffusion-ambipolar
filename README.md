@@ -44,7 +44,11 @@ Clone the repository of `Nektar++` from [https://gitlab.nektar.info/nektar/nekta
 >make -j 4 install
 >ctest
 ```
-**Curses interface:** Alternatively, to specify the full range of flags of configuration using the curses interface to `CMake`, the following commands can be executed to install `Nektar++`:
+The command *ctest* is used to run a series of testing cases to verify the correct installation.   
+
+**Curses interface:** 
+
+Alternatively, to specify the full range of flags of configuration using the curses interface to `CMake`, the following commands can be executed to install `Nektar++`:
 
 ```bash
 >tar -xvzf nektar-5.0.2.tar.gz
@@ -54,10 +58,15 @@ Clone the repository of `Nektar++` from [https://gitlab.nektar.info/nektar/nekta
 >make -j 4 install
 >ctest
 ```
+By executing the command *ccmake ..*, all flags of configuration are listed and displayed. For a typical installation, the following flags, NEKTAR_USE_MPI, NEKTAR_USE_SCOTCH, NEKTAR_USE_SYSTEM_BLAS_LAPACK and NEKTAR_USE_HDF5, should be switched on by pressing *enter* key. Subsequently, pressure *c* key until the option *Pressure [g] to generate and exit* appears. Finally, pressure *g* to generate the configuration file. 
 
-**Debugging installation and testing:**
+**Debugging compilation, installation and testing:**
 
+If the compilation fails, check the possible broken links during the configuration by the command *ccmake ..* and togger it to the advanced mode by press the *t* key. A list of detailed links to the libraries will appears for investigation.
 
+If an error was observed during installation, take note the description of this error and identify which program causes it. For example, if it is related to *mpi*, double check the possible broken links of mpi during configuration or verify the working condition of the pre-installed *mpi* on the cluster.
+
+If some testing cases fail during *ctest*, check the log files in the **$HOME/nektar-v5.0.2/build/Testing/Temporary/** folder and identify the origin of the error.
 
 ### Installing proxy-app
 
