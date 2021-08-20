@@ -58,7 +58,7 @@ Alternatively, to specify the full range of flags of configuration using the cur
 >make -j 4 install
 >ctest
 ```
-By executing the command *ccmake ..*, all flags of configuration are listed and displayed. For a typical installation, the following flags, NEKTAR_USE_MPI, NEKTAR_USE_SCOTCH, NEKTAR_USE_SYSTEM_BLAS_LAPACK and NEKTAR_USE_HDF5, should be switched on by pressing *enter* key. Subsequently, pressure *c* key until the option *Pressure [g] to generate and exit* appears. Finally, pressure *g* to generate the configuration file. 
+By executing the command *ccmake ..*, all flags of configuration are listed and displayed. For a typical installation, the following flags, NEKTAR_USE_MPI, NEKTAR_USE_SCOTCH, NEKTAR_USE_SYSTEM_BLAS_LAPACK and NEKTAR_USE_HDF5, should be switched on by pressing *enter* key. Subsequently, pressing *c* key until the option *Press [g] to generate and exit* appears. Finally, press *g* to generate the configuration file. 
 
 **Debugging compilation, installation and testing:**
 
