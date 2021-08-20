@@ -34,7 +34,7 @@ In addition, `Nektar++` can be linked to some optional packages in order to init
 The typtical procedures of installation are presented below. It is recommended to use the pre-built packages, e.g., `openmpi`, in the system, especially compiling `Nektar++` on the cluster.  For the additional information on the options of configuration and the full range of different features, please refer to the user-guide of [Nektar++](https://www.nektar.info/downloads/).
 
 ### Installing Nektar++ from source
-Clone the repository of `Nektar++` from [https://gitlab.nektar.info/nektar/nektar](https://gitlab.nektar.info/nektar/nektar) or download the tarball of `Nektar++` from [https://www.nektar.info/downloads/](https://www.nektar.info/downloads/) and put it into the home directory (*$HOME*). Assuming the file name of the tarball is *nektar-5.0.2.tar.gz*, execute the following commands to install `Nektar++` in the default directory ($HOME/nektar-5.0.2/build/dist):
+Clone the repository of `Nektar++` from [https://gitlab.nektar.info/nektar/nektar](https://gitlab.nektar.info/nektar/nektar) or download the tarball of `Nektar++` from [https://www.nektar.info/downloads/](https://www.nektar.info/downloads/) and put it into the home directory (**$HOME**). Assuming the file name of the tarball is **nektar-5.0.2.tar.gz**, execute the following commands to install `Nektar++` in the default directory ($HOME/nektar-5.0.2/build/dist):
 
 ```bash
 >tar -xvzf nektar-5.0.2.tar.gz
@@ -44,7 +44,7 @@ Clone the repository of `Nektar++` from [https://gitlab.nektar.info/nektar/nekta
 >make -j 4 install
 >ctest
 ```
-Alternatively, to specify the full range of flags of configuration using the curses interface to *CMake*, the following commands can be executed to install `Nektar++`:
+**Curses interface:** Alternatively, to specify the full range of flags of configuration using the curses interface to `CMake`, the following commands can be executed to install `Nektar++`:
 
 ```bash
 >tar -xvzf nektar-5.0.2.tar.gz
@@ -55,6 +55,7 @@ Alternatively, to specify the full range of flags of configuration using the cur
 >ctest
 ```
 
+**Debugging installation and testing:**
 
 
 
