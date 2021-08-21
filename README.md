@@ -15,12 +15,12 @@
 ## Table of contents
 
   * [Description](#description)
-  * [Installation and dependencies](##installation-and-dependencies)
+  * [Installation and dependencies](#installation-and-dependencies)
     * [Installing Nektar++ from source](#installing-nektar++-from-source)
-    * [Installing proxy-app](###installing-proxy-app)
-  * [Execution](##execution)
-  * [References](##references)
-  * [License](##license)
+    * [Installing proxy-app](#installing-proxy-app)
+  * [Execution](#execution)
+  * [References](#references)
+  * [License](#license)
 
 ## Description
 **Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework[(Cantwell et al 2015)](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the [/docs/](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder. For the detailed formulations and tutorials of Nektar++, please refer to the user-guide and developer-guide at the home page of [Nektar++](https://www.nektar.info/). Some examples are provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder. 
