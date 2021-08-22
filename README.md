@@ -131,35 +131,33 @@ The output file format is in *.dat* (tecplot file). To view the results in parav
 ## XML Session File
 The XML session file is used as an input file to communicate with the Nektar++ libraries and set up the simulations. It starts with the **\<NEKTAR> ... \</NEKTAR>** section and include a number of sub-sections. For example,
 
->\<NEKTAR\>
->
->>
->>\<GEOMETRY\>\
->>\</GEOMETRY\>
->>
->>\<EXPANSIONS\>\
->>\</EXPANSIONS\>
->>
->>\<CONDITIONS>
->>>
->>>\<PARAMETERS\>\
->>>\</PARAMETERS\>
->>>
->>>\<SOLVERINFO\>\
->>>\</SOLVERINFO\>
->>>
->>>\<VARIABLES\>\
->>>\</VARIABLES\>
->>>
->>>\<BOUNDARYREGIONS\>\
->>>\</BOUNDARYREGIONS\>
->>>
->>>\<BOUNDARYCONDITIONS\>\
->>>\</BOUNDARYCONDITIONS\>
->>>
->>\</CONDITIONS>
->
->\</NEKTAR\>
+```
+<NEKTAR>
+  <GEOMETRY>
+  ...
+  </GEOMETRY>
+  <EXPANSIONS>
+  ...
+  </EXPANSIONS>
+  <CONDITIONS>
+    <PARAMETERS>
+    ...
+    </PARAMETERS>
+    <SOLVERINFO>
+    ...
+    </SOLVERINFO>
+    <VARIABLES>
+    ...
+    </VARIABLES>
+    <BOUNDARYREGIONS>
+    ...
+    </BOUNDARYREGIONS>
+    <BOUNDARYCONDITIONS>
+    ...
+    </BOUNDARYCONDITIONS>
+  </CONDITIONS>
+</NEKTAR>
+```
 
 The **\<GEOMETRY> ... \</GEOMETRY>** section stores the information on the mesh, e.g., the vertex, edge, face and element lists. The **\<EXPANSIONS> ... \</EXPANSIONS>** section defines the employed approximating function. Especially, *NUMMODES* defines the order of the approximating function. 
 
