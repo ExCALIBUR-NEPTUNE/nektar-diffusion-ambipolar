@@ -12,12 +12,13 @@
 	    <P> epsilon_0	= 8.8542e-12	    </P>
 	    <P> e		= 1.6022e-19	    </P>
 	    <P> k_B		= 1.3807e-23	    </P>
-	    <P> Lambda		= 13.0		    </P>
+	    <P> lambda		= 13.0		    </P>
 	    <P> theta 		= 0.0		    </P>
-	    <P> N   		= 1e18 	  	    </P>
+	    <P> n   		= 1e18 	  	    </P>
 	    <P> B   		= 1.0 	  	    </P>
-	    <P> k_par 		= 19.2 * sqrt(2.0 * PI^3.0) * (1.0/sqrt(m_e)) * (epsilon_0^2.0 / e^4.0) * (((k_B * T_e)^(5.0/2.0))/((Z^2.0) * Lambda)) </P>
-            <P> k_perp 		= 1.0/(6.0*sqrt(PI^3.0))*1.0/m_i*(N*Z*e/(B*epsilon_0))^2.0*((m_p*A)^1.5*Lambda)/sqrt(k_B*T_i) 		    </P>
+	    <P> k_par 		= 19.2 * sqrt(2.0 * PI^3.0) * (1.0/sqrt(m_e)) * (epsilon_0^2.0 / e^4.0) * (((k_B * T_e)^(5.0/2.0))/((Z^2.0) * lambda)) </P>
+            <!--<P> k_perp 		= 1.0/(6.0*sqrt(PI^3.0))*1.0/m_i*(n*Z*e/(B*epsilon_0))^2.0*((m_p*A)^1.5*lambda)/sqrt(k_B*T_i) </P>-->
+            <P> k_perp 		= 0.0               </P>
 	    <P> a		= 200.0             </P>
         </PARAMETERS>
 
