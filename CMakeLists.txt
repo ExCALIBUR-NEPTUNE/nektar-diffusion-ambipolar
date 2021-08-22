@@ -26,6 +26,7 @@ ADD_EXECUTABLE(DiffusionSolver
     src/DiffusionSolver.cpp
     src/UnsteadyDiffusion.cpp
     src/SteadyDiffusion.cpp
+    src/SteadyDiffusionVaryingB.cpp
     )
 
 # Add target link libraries.
@@ -33,3 +34,7 @@ TARGET_LINK_LIBRARIES(DiffusionSolver ${NEKTAR++_LIBRARIES} ${NEKTAR++_TP_LIBRAR
 INSTALL(TARGETS DiffusionSolver DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 TARGET_COMPILE_DEFINITIONS(DiffusionSolver PUBLIC ${NEKTAR++_DEFINITIONS})
+
+#SET_TARGET_PROPERTIES(TimingGeneralMatrixOp2D PROPERTIES COMPILE_FLAGS -DBASE_PATH="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
+#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/example/do_TimingGeneralMatrixOp2D       
+#    ${CMAKE_BINARY_DIR}/dist/bin/do_TimingGeneralMatrixOp2D COPYONLY)

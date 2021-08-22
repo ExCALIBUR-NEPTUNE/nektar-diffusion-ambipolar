@@ -71,10 +71,10 @@ namespace Nektar
 
         int npoints = m_fields[0]->GetNpoints();
 
-        m_session->LoadParameter("k_par",   m_kpar,    1000.0);
+        m_session->LoadParameter("k_par",   m_kpar,    100.0);
         m_session->LoadParameter("k_perp",  m_kperp,   1.0);
         m_session->LoadParameter("theta",   m_theta,   0.0);
-        m_session->LoadParameter("N",       m_N,       1e18);
+        m_session->LoadParameter("n",       m_n,       1e18);
         m_session->LoadParameter("epsilon", m_epsilon, 1.0);
 
         // Convert to radians.
@@ -87,9 +87,9 @@ namespace Nektar
 
 	// Set up variable coefficients
         NekDouble ct = cos(m_theta), st = sin(m_theta);
-        NekDouble d00 = (2.0 / (3.0 * m_N)) * ((m_kpar - m_kperp) * ct * ct + m_kperp);
-        NekDouble d01 = (2.0 / (3.0 * m_N)) * ((m_kpar - m_kperp) * ct * st);
-        NekDouble d11 = (2.0 / (3.0 * m_N)) * ((m_kpar - m_kperp) * st * st + m_kperp);
+        NekDouble d00 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * ct + m_kperp);
+        NekDouble d01 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * st);
+        NekDouble d11 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * st * st + m_kperp);
         m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
         m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
         m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);

@@ -63,7 +63,7 @@ namespace Nektar
         int npoints = m_fields[0]->GetNpoints();
 
         m_session->LoadParameter("k_par", m_kpar, 100.0);
-        m_session->LoadParameter("k_perp", m_kperp, 1);
+        m_session->LoadParameter("k_perp", m_kperp, 1.0);
         m_session->LoadParameter("theta", m_theta, 5.0);
 
         // Convert to radians.
