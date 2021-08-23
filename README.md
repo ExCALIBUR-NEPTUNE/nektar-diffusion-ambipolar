@@ -28,13 +28,11 @@
 
 The variational formulation of the two-dimensional anisotropic thermal conduction in the magnetized plasma can be written as
 
-<p align="center">
+<div align="center">
   <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs" target="_blank" >
     <img alt="variational_formulation" src="readme/equation.jpg" width="350" />
   </a>
-</p>
-
-<center><img src="readme/equation.jpg" width="350" /></center>
+</div>
 
 where \psi and $T$ respectively are the test function and the temperature. $\bm{\kappa}_c$ is the anisotropic thermal conductivity tensor and $Q$ represents the heat source in field. $\bm{n}$ is the outward normal vector along the boundaries of the domain.
 
