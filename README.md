@@ -26,6 +26,17 @@
 ## Description
 **Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework[(Cantwell et al 2015)](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the [/docs/](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder. For the detailed formulations and tutorials of Nektar++, please refer to the user-guide and developer-guide at the home page of [Nektar++](https://www.nektar.info/). Some examples are provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder. 
 
+The variational formulation of the two-dimensional anisotropic thermal conduction in the magnetized plasma can be written as
+
+<p align="center">
+  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs" target="_blank" >
+    <img alt="variational_formulation" src="readme/equation.jpg" width="350" />
+  </a>
+</p>
+
+where $\psi$ and $T$ respectively are the test function and the temperature. $\bm{\kappa}_c$ is the anisotropic thermal conductivity tensor and $Q$ represents the heat source in field. $\bm{n}$ is the outward normal vector along the boundaries of the domain.
+
+
 ## Installation and dependencies
 The compilation of Nektar-diffusion proxy-app requires a C++ compiler, `CMake` and `Nektar++`. To successfully compile and install `Nektar++`, the following programs and libraries are also necessary: `Scotch`, `Boost`, `Flex`, `TinyXML` (for parsing parameters and setting up simulation), `Blas` and `Lapack` (for linear algebra). Some of these are required and must be installed prior to compiling `Nektar++`, most of which are available as pre-built system packages on most Linux distributions, installed manually by a user (typically the development packages with a *-dev* or *-devel* suffix is required) or can be downloaded and compiled by Nektar++ automatically (by specifying the flags of configuration), e.g., `TinyXML` and `Scotch`. It is important to make sure that the directory of their executables are included in the searching path of the system.
 
