@@ -4,7 +4,7 @@
   </a>
 </div>
 <div align="center">
-  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/LICENSE.txt" target="_blank">
+  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/LICENSE.txt" target="_blank">
     <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
   </a>
 </div>
