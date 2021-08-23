@@ -1,12 +1,12 @@
 <p align="center">
   <a href="https://www.nektar.info/" target="_blank" >
-    <img alt="Nektar++ diffusion" src="readme/icon-blue.png" width="100" />
+    <img align="center" alt="Nektar++ diffusion" src="readme/icon-blue.png" width="100" />
   </a>
 </p>
 
 <p align="center">
   <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/LICENSE.txt" target="_blank">
-    <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+    <img align="center" alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
   </a>
 </p>
 
@@ -30,7 +30,7 @@ The variational formulation of the two-dimensional anisotropic thermal conductio
 
 <p align="center">
   <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs" target="_blank" >
-    <img alt="variational_formulation" src="readme/equation.jpg" width="350" />
+    <img align="center" alt="variational_formulation" src="readme/equation.jpg" width="350" />
   </a>
 </p>
 
