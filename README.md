@@ -33,7 +33,7 @@ The variational formulation of the two-dimensional anisotropic thermal conductio
   </a>
 </div>
 
-where $`\psi`$ and $T$ respectively are the test function and the temperature. $\bm{\kappa}_c$ is the anisotropic thermal conductivity tensor and $Q$ represents the heat source in field. $\bm{n}$ is the outward normal vector along the boundaries of the domain.
+where $`\psi`$ and $`T`$ respectively are the test function and the temperature. $`\bm{\kappa}_c`$ is the anisotropic thermal conductivity tensor and $`Q`$ represents the heat source in field. $`\bm{n}`$ is the outward normal vector along the boundaries of the domain.
 
 
 ## Installation and dependencies
