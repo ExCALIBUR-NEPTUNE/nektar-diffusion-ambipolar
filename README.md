@@ -1,14 +1,13 @@
-<p align="center">
+<div align="center">
   <a href="https://www.nektar.info/" target="_blank" >
     <img alt="Nektar++ diffusion" src="readme/icon-blue.png" width="100" />
   </a>
-</p>
-
-<p align="center">
+</div>
+<div align="center">
   <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/LICENSE.txt" target="_blank">
     <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
   </a>
-</p>
+</div>
 
 <h1>Nektar-diffusion proxy-app</h1>
 
@@ -33,6 +32,8 @@ The variational formulation of the two-dimensional anisotropic thermal conductio
     <img alt="variational_formulation" src="readme/equation.jpg" width="350" />
   </a>
 </div>
+
+latexmath:[C = \alpha + \beta Y^{\gamma} + \epsilon]
 
 where \psi and $T$ respectively are the test function and the temperature. $\bm{\kappa}_c$ is the anisotropic thermal conductivity tensor and $Q$ represents the heat source in field. $\bm{n}$ is the outward normal vector along the boundaries of the domain.
 
