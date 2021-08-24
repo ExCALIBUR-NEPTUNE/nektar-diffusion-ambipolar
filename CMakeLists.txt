@@ -21,6 +21,13 @@ MESSAGE(STATUS "Found Nektar++: version ${NEKTAR++_VERSION}")
 # Set RPATH for wherever Nektar++ is installed.
 SET(CMAKE_INSTALL_RPATH "${NEKTAR++_LIBRARY_DIRS}")
 
+# Components of the Nektar++ package to build
+OPTION(NEKTAR_BUILD_DOCS    "Build the latex document." OFF)
+IF (NEKTAR_BUILD_DOCS)
+	INCLUDE_DIRECTORIES(docs)
+	ADD_SUBDIRECTORY(docs)
+ENDIF (NEKTAR_BUILD_DOCS)
+
 # Add source files.
 ADD_EXECUTABLE(DiffusionSolver
     src/DiffusionSolver.cpp
@@ -38,3 +45,5 @@ TARGET_COMPILE_DEFINITIONS(DiffusionSolver PUBLIC ${NEKTAR++_DEFINITIONS})
 #SET_TARGET_PROPERTIES(TimingGeneralMatrixOp2D PROPERTIES COMPILE_FLAGS -DBASE_PATH="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
 #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/example/do_TimingGeneralMatrixOp2D       
 #    ${CMAKE_BINARY_DIR}/dist/bin/do_TimingGeneralMatrixOp2D COPYONLY)
+
+

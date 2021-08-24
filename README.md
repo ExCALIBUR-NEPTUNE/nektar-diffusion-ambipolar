@@ -18,7 +18,7 @@
     * [Installing Nektar++ from source](#installing-nektar++-from-source)
     * [Installing proxy-app](#installing-proxy-app)
   * [Execution](#execution)
-  * [XML Session File](#xml-session-file)
+  * [Parameters](#parameters)
   * [References](#references)
   * [License](#license)
 
@@ -138,42 +138,25 @@ In the provided examples, the mesh is prepared using [gmsh](https://gmsh.info/).
 ```
 The output file format is in *.dat* (tecplot file). To view the results in paraview, change *.dat* to *.vtu*.
 
-## XML Session File
-The XML session file is used as an input file to communicate with the Nektar++ libraries and set up the simulations. It starts with the **\<NEKTAR> ... \</NEKTAR>** section and include a number of sub-sections. For example,
+## Parameters
+The key parameters to set up the simulation are listed below:
 
-```
-<NEKTAR>
-  <GEOMETRY>
-  ...
-  </GEOMETRY>
-  <EXPANSIONS>
-  ...
-  </EXPANSIONS>
-  <CONDITIONS>
-    <PARAMETERS>
-    ...
-    </PARAMETERS>
-    <SOLVERINFO>
-    ...
-    </SOLVERINFO>
-    <VARIABLES>
-    ...
-    </VARIABLES>
-    <BOUNDARYREGIONS>
-    ...
-    </BOUNDARYREGIONS>
-    <BOUNDARYCONDITIONS>
-    ...
-    </BOUNDARYCONDITIONS>
-  </CONDITIONS>
-</NEKTAR>
-```
+<div align="center">
 
-The **\<GEOMETRY> ... \</GEOMETRY>** section stores the information on the mesh, e.g., the vertex, edge, face and element lists. The **\<EXPANSIONS> ... \</EXPANSIONS>** section defines the employed approximating function. Especially, *NUMMODES* defines the order of the approximating function. 
+| Parameter | Description |
+| :---      | :---        |
+| theta | angle of magnetic field  |
+| B | magnitude of magnetic field |
+| A = m_i/m_p | ratio between masses of ions and proton |
+| Z | ion charge state |
+| lambda | Coulomb logarithm |
+| TimeStep | time step size |
+| NumSteps | total number of time steps |
 
-The **\<CONDITIONS> ... \</CONDITIONS>** section contains the information to set up the parameters of the numerical algorithms. For instance, the **\<PARAMETERS> ... \</PARAMETERS>** section defines the parameters used in the simulations, the **\<SOLVERINFO> ... \</SOLVERINFO>** section controls the paramters of the employed solver and the **\<VARIABLES> ... \</VARIABLES>** section lists out the physical variables that the simulation solves for. The **\<BOUNDARYREGIONS> ... \</BOUNDARYREGIONS>** and the **\<BOUNDARYCONDITIONS> ... \</BOUNDARYCONDITIONS>** describe where and what boundary conditions are imposed. 
+</div>
 
-For the detailed explanation and examples of XML Session files in `Nektar++`, please refer to its [user-guide](https://www.nektar.info/getting-started/documentation/) and [tutorials](https://www.nektar.info/getting-started/tutorials/) respectively.
+Typically the angle and magnitude of the magnetic field should be specified a prior. The angle is measured with respect to the positive $`x`$ axis in the clock-wise direction. Particularly, the magnitude of the magnetic field impose influences on the thermal diffusivity perpendicular to the magnetic field line.
+
 
 
 ## References
