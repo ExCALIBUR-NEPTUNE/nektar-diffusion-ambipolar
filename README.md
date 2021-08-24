@@ -86,10 +86,11 @@ Clone the repository of Nektar-diffusion proxy-app from [https://gitlab.nektar.i
 >cd $HOME/nektar-diffusion
 >mkdir build && cd build 
 >cmake -DNektar++_DIR=$HOME/nektar-v5.0.2/build  -DNEKTAR_BUILD_DOCS=ON ..
+>make document-pdf
 >make -j 4 install
 ```
 
-*DNektar++_DIR* should be the directory containing either *Nektar++Config.cmake* or *nektar++-config.cmake*. In this case, it is *$HOME/nektar-v5.0.2/build*. The *DNEKTAR_BUILD_DOCS=ON* enables the build of the latex files in the the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder, which documents the variational formulation of the two-dimensional anisotropic thermal conduction and the key parameters. To build these latex files, `TexLive` should be installed a prior and its executables are searchable in the PATH of the system.
+*DNektar++_DIR* should be the directory containing either *Nektar++Config.cmake* or *nektar++-config.cmake*. In this case, it is *$HOME/nektar-v5.0.2/build*. The *DNEKTAR_BUILD_DOCS=ON* enables the build of the latex files in the the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder, which documents the variational formulation of the two-dimensional anisotropic thermal conduction and the key parameters. Therefore the document.pdf in **docs** folder can be built by *make document-pdf*. To build these latex files, `TexLive` should be installed a prior and its executables are searchable in the PATH of the system.
 
 **Curses interface:** 
 
@@ -99,6 +100,7 @@ Alternatively, the proxy-app can be installed using the curses interface to `CMa
 >cd $HOME/nektar-diffusion
 >mkdir build && cd build 
 >ccmake  ..
+>make document-pdf
 >make -j 4 install
 ```
 
