@@ -23,7 +23,7 @@
   * [License](#license)
 
 ## Description
-**Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework[(Cantwell et al 2015)](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the [/docs/](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder. For the detailed formulations and tutorials of Nektar++, please refer to the user-guide and developer-guide at the home page of [Nektar++](https://www.nektar.info/). Some examples are provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder. 
+**Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework[(Cantwell et al 2015)](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder. For the detailed formulations and tutorials of Nektar++, please refer to the user-guide and developer-guide at the home page of [Nektar++](https://www.nektar.info/). Some examples are provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder. 
 
 The variational formulation of the two-dimensional anisotropic thermal conduction in the magnetized plasma can be written as
 
@@ -85,11 +85,11 @@ Clone the repository of Nektar-diffusion proxy-app from [https://gitlab.nektar.i
 ```bash
 >cd $HOME/nektar-diffusion
 >mkdir build && cd build 
->cmake -DNektar++_DIR=$HOME/nektar-v5.0.2/build  ..
+>cmake -DNektar++_DIR=$HOME/nektar-v5.0.2/build  -DNEKTAR_BUILD_DOCS=ON ..
 >make -j 4 install
 ```
 
-*DNektar++_DIR* should be the directory containing either *Nektar++Config.cmake* or *nektar++-config.cmake*. In this case, it is *$HOME/nektar-v5.0.2/build*.
+*DNektar++_DIR* should be the directory containing either *Nektar++Config.cmake* or *nektar++-config.cmake*. In this case, it is *$HOME/nektar-v5.0.2/build*. The *DNEKTAR_BUILD_DOCS=ON* enables the build of the latex files in the the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder, which documents the variational formulation of the two-dimensional anisotropic thermal conduction and the key parameters. To build these latex files, `TexLive` should be installed a prior and its executables are searchable in the PATH of the system.
 
 **Curses interface:** 
 
@@ -102,7 +102,7 @@ Alternatively, the proxy-app can be installed using the curses interface to `CMa
 >make -j 4 install
 ```
 
-While configuring the proxy-app with *ccmake ..*, define *Nektar++_DIR=~/nektar-v5.0.2/build*, press *c* key and press *g* key to generate the configuration file.
+While configuring the proxy-app with *ccmake ..*, define *Nektar++_DIR=~/nektar-v5.0.2/build* and/or *NEKTAR_BUILD_DOCS=ON*, press *c* key and press *g* key to generate the configuration file.
 
 ## Execution
 In the provided examples, the mesh is prepared using [gmsh](https://gmsh.info/). It can be installed by
@@ -152,10 +152,11 @@ The key parameters to set up the simulation are listed below:
 | lambda | Coulomb logarithm |
 | TimeStep | time step size |
 | NumSteps | total number of time steps |
+| IO_CheckSteps | output frequency |
 
 </div>
 
-Typically the angle and magnitude of the magnetic field should be specified a prior. The angle is measured with respect to the positive $`x`$ axis in the clock-wise direction. Particularly, the magnitude of the magnetic field impose influences on the thermal diffusivity perpendicular to the magnetic field line.
+Typically the angle and magnitude of the magnetic field should be specified a prior. The angle is measured with respect to the positive $`x`$ axis in the clock-wise direction. Particularly, the magnitude of the magnetic field impose influences on the thermal diffusivity perpendicular to the magnetic field line. In an unsteady simulation, The values of TimeStep and NumSteps respectively are the time step size in numerical integration and the total number of the time steps. The value of IO_CheckSteps is used to control the ouptut frequency with respect to the time steps.
 
 
 
