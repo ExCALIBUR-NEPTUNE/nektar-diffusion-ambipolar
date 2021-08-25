@@ -21,11 +21,19 @@ MESSAGE(STATUS "Found Nektar++: version ${NEKTAR++_VERSION}")
 # Set RPATH for wherever Nektar++ is installed.
 SET(CMAKE_INSTALL_RPATH "${NEKTAR++_LIBRARY_DIRS}")
 
+# Components of the Nektar++ package to build
+OPTION(NEKTAR_BUILD_DOCS    "Build the latex document." OFF)
+IF (NEKTAR_BUILD_DOCS)
+	INCLUDE_DIRECTORIES(docs)
+	ADD_SUBDIRECTORY(docs)
+ENDIF (NEKTAR_BUILD_DOCS)
+
 # Add source files.
 ADD_EXECUTABLE(DiffusionSolver
     src/DiffusionSolver.cpp
     src/UnsteadyDiffusion.cpp
     src/SteadyDiffusion.cpp
+    src/SteadyDiffusionVaryingB.cpp
     )
 
 # Add target link libraries.

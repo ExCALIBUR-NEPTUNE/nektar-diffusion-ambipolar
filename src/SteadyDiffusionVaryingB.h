@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusion.h
+// File SteadyDiffusionVaryingB.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,7 +28,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Unsteady diffusion solve routines
+// Description: Steady diffusion with a non-constant magnetic field solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -42,17 +42,18 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-class SteadyDiffusion : public EquationSystem
+
+class SteadyDiffusionVaryingB : public EquationSystem
 {
 public:
-    friend class MemoryManager<SteadyDiffusion>;
+    friend class MemoryManager<SteadyDiffusionVaryingB>;
 
     /// Creates an instance of this class
     static EquationSystemSharedPtr create(
         const LibUtilities::SessionReaderSharedPtr& pSession,
         const SpatialDomains::MeshGraphSharedPtr& pGraph)
     {
-        EquationSystemSharedPtr p = MemoryManager<SteadyDiffusion>
+        EquationSystemSharedPtr p = MemoryManager<SteadyDiffusionVaryingB>
             ::AllocateSharedPtr(pSession, pGraph);
         p->InitObject();
         return p;
@@ -61,10 +62,10 @@ public:
     static std::string className;
 
     /// Destructor
-    virtual ~SteadyDiffusion();
+    virtual ~SteadyDiffusionVaryingB();
 
 protected:
-    SteadyDiffusion(
+    SteadyDiffusionVaryingB(
         const LibUtilities::SessionReaderSharedPtr& pSession,
         const SpatialDomains::MeshGraphSharedPtr& pGraph);
 
@@ -73,9 +74,6 @@ protected:
     virtual void v_DoSolve();
 
 private:
-    NekDouble m_kperp;
-    NekDouble m_kpar;
-    NekDouble m_theta;
     StdRegions::VarCoeffMap m_varcoeff;
 };
 }

@@ -72,10 +72,11 @@ void UnsteadyDiffusion::v_InitObject()
 
     int npoints = m_fields[0]->GetNpoints();
 
-    m_session->LoadParameter("k_par", m_kpar, 100.0);
-    m_session->LoadParameter("k_perp", m_kperp, 1);
-    m_session->LoadParameter("theta", m_theta, 5.0);
-    m_session->LoadParameter("B", m_B, 1.0);
+    m_session->LoadParameter("k_par",   m_kpar,    100.0);
+    m_session->LoadParameter("k_perp",  m_kperp,   1.0);
+    m_session->LoadParameter("theta",   m_theta,   0.0);
+    m_session->LoadParameter("n",       m_n,       1e18);
+    m_session->LoadParameter("epsilon", m_epsilon, 1.0);
 
     // Convert to radians.
     m_theta *= -M_PI/180.0;
@@ -87,15 +88,12 @@ void UnsteadyDiffusion::v_InitObject()
 
     // Set up variable coefficients
     NekDouble ct = cos(m_theta), st = sin(m_theta);
-    for (int i = 0; i < nq; ++i)
-    {
-        NekDouble d00 = (m_kpar - m_kperp) * m_B * m_B * ct * ct + m_kperp;
-        NekDouble d01 = (m_kpar - m_kperp) * m_B * m_B * ct * st;
-        NekDouble d11 = (m_kpar - m_kperp) * m_B * m_B * st * st + m_kperp;
-        m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-        m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-        m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
-    }
+    NekDouble d00 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * ct + m_kperp);
+    NekDouble d01 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * st);
+    NekDouble d11 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * st * st + m_kperp);
+    m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+    m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+    m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
 
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
              "Only continuous Galerkin discretisation supported.");
@@ -137,7 +135,7 @@ void UnsteadyDiffusion::DoOdeProjection(
     const NekDouble time)
 {
     int i;
-    int nvariables = inarray.size();
+    int nvariables = inarray.num_elements();
     SetBoundaryConditions(time);
 
     Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
@@ -162,9 +160,9 @@ void UnsteadyDiffusion::DoImplicitSolve(
 
     StdRegions::ConstFactorMap factors;
 
-    int nvariables = inarray.size();
+    int nvariables = inarray.num_elements();
     int npoints    = m_fields[0]->GetNpoints();
-    factors[StdRegions::eFactorLambda] = 1.0 / lambda;
+    factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsilon;
 
     if(m_useSpecVanVisc)
     {
@@ -187,6 +185,7 @@ void UnsteadyDiffusion::DoImplicitSolve(
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(outarray[i],
                                m_fields[i]->UpdateCoeffs(),
+                               NullFlagList,
                                factors,
                                m_varcoeff);
 
