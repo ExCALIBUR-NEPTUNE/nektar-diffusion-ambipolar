@@ -148,9 +148,7 @@ Typically the angle and magnitude of the magnetic field should be specified a pr
 
 ## References
 
-#### (Cantwell et al 2015) 
-*Nektar++: An open-source spectral/hp
-element framework.* [[DOI](https://doi.org/10.1016/j.cpc.2015.02.008)]
+<a name="cantwell-et-al-2015"></a>\[1\] Cantwell et al, *Nektar++: An open-source spectral/hp element framework.*, JCP, 2015 [[DOI](https://doi.org/10.1016/j.cpc.2015.02.008)]
 
 ## License
 
