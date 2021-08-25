@@ -12,29 +12,9 @@ MARK_AS_ADVANCED(HTLATEX)
 
 
 ADD_CUSTOM_TARGET(document-pdf
-	COMMAND ${PDFLATEX} --output-directory ${GUIDE} ${GUIDESRC}/document.tex
+    COMMAND ${PDFLATEX} --output-directory ${GUIDE} ${GUIDESRC}/document.tex
     COMMAND BIBINPUTS=${GUIDESRC} BSTINPUT=${GUIDE} TEXMFOUTPUT=${GUIDE} ${BIBTEX} ${GUIDE}/document
-	COMMAND ${PDFLATEX} --output-directory ${GUIDE} ${GUIDESRC}/document.tex
-	COMMAND ${PDFLATEX} --output-directory ${GUIDE} ${GUIDESRC}/document.tex
-	WORKING_DIRECTORY ${GUIDESRC}
+    COMMAND ${PDFLATEX} --output-directory ${GUIDE} ${GUIDESRC}/document.tex
+    COMMAND ${PDFLATEX} --output-directory ${GUIDE} ${GUIDESRC}/document.tex
+    WORKING_DIRECTORY ${GUIDESRC}
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
