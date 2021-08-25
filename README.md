@@ -15,8 +15,9 @@
 
   * [Description](#description)
   * [Installation and dependencies](#installation-and-dependencies)
-    * [Installing Nektar++ from source](#installing-nektar++-from-source)
-    * [Installing proxy-app](#installing-proxy-app)
+    * [Docker](#docker)
+    * [Using Nektar++ binary packages](#using-nektar++-binary-packages)
+    * [Using Nektar++ source code](#using-nektar++-source-code)
   * [Execution](#execution)
   * [Parameters](#parameters)
   * [References](#references)
