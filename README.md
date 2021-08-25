@@ -4,7 +4,7 @@
   </a>
 </div>
 <div align="center">
-  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/LICENSE.txt" target="_blank">
+  <a href="LICENSE.txt" target="_blank">
     <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
   </a>
 </div>
@@ -24,15 +24,11 @@
   * [License](#license)
 
 ## Description
-**Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework[(Cantwell et al 2015)](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder. For the detailed formulations and tutorials of Nektar++, please refer to the user-guide and developer-guide at the home page of [Nektar++](https://www.nektar.info/). Some examples are provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder. 
+**Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework [[1]](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the `docs` folder. For the detailed formulations and tutorials of Nektar++, please refer to the documentation on the [Nektar++ website](https://www.nektar.info/). Some examples are provided in the `example` folder. 
 
 The variational formulation of the two-dimensional anisotropic thermal conduction in the magnetized plasma can be written as
 
-<div align="center">
-  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs" target="_blank" >
-    <img alt="variational_formulation" src="readme/equation.jpg" width="350" />
-  </a>
-</div>
+![Variational formulation](/readme/equation.jpg)
 
 where $`\psi`$ and $`T`$ respectively are the test function and the temperature. $`\bm{\kappa}_c`$ is the anisotropic thermal conductivity tensor and $`Q`$ represents the heat source in field. $`\bm{n}`$ is the outward normal vector along the boundaries of the domain.
 
@@ -69,7 +65,7 @@ git clone https://gitlab.nektar.info/nektar/nektar
 cd nektar
 git checkout v5.0.3
 ```
-Compile it following the instructions at [https://www.nektar.info](https://www.nektar.info). To save time, set NEKTAR_BUILD_SOLVERS=OFF and NEKTAR_BUILD_DEMOS=OFF. Many of the dependencies are available as pre-build packages in most Linux distributions (e.g. Boost, TinyXML, Scotch, BLAS, LAPACK). It is recommended to turn on the NEKTAR_USE_MPI option to enable parallel execution. Run `make install` to collate the binaries and library files under the `dist` sub-directory or set CMAKE_INSTALL_PREFIX to your preferred install location. To check Nektar++ is build correctly run `ctest`.
+Compile it following the instructions at [https://www.nektar.info](https://www.nektar.info). To save time, set NEKTAR_BUILD_SOLVERS=OFF and NEKTAR_BUILD_DEMOS=OFF. Many of the dependencies are available as pre-built packages in most Linux distributions (e.g. Boost, TinyXML, Scotch, BLAS, LAPACK). It is recommended to turn on the NEKTAR_USE_MPI option to enable parallel execution. Run `make install` to collate the binaries and library files under the `dist` sub-directory and (optionally) set CMAKE_INSTALL_PREFIX to your preferred install location. To check Nektar++ is built correctly run `ctest`.
 
 Then compile the nektar-diffusion solver using
 ```bash
@@ -106,7 +102,7 @@ echo 'PATH=$HOME/gmsh-2.16.0-Linux/bin:$PATH' >> $HOME/.bashrc
 source $HOME/.bashrc
 ```
 
-To run the examples provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder, access the folder containing a particular example and execute the following command:
+To run the examples provided in the [example](example) folder, access the folder containing a particular example and execute the following command:
 
 1. **convert mesh**
 
