@@ -54,8 +54,8 @@ SteadyDiffusion::SteadyDiffusion(
 }
 
 /**
-* @brief Initialisation object for the unsteady diffusion problem.
-*/
+ * @brief Initialisation object for the unsteady diffusion problem.
+ */
 void SteadyDiffusion::v_InitObject()
 {
     EquationSystem::v_InitObject();
@@ -88,8 +88,8 @@ void SteadyDiffusion::v_InitObject()
 }
 
 /**
-* @brief Unsteady diffusion problem destructor.
-*/
+ * @brief Unsteady diffusion problem destructor.
+ */
 SteadyDiffusion::~SteadyDiffusion()
 {
 }
@@ -100,8 +100,8 @@ void SteadyDiffusion::v_GenerateSummary(SummaryList& s)
 }
 
 /**
-* @brief Implicit solution of the unsteady diffusion problem.
-*/
+ * @brief Implicit solution of the unsteady diffusion problem.
+ */
 void SteadyDiffusion::v_DoSolve()
 {
     StdRegions::ConstFactorMap factors;

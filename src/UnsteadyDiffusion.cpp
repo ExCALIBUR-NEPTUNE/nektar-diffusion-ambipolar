@@ -43,6 +43,7 @@ using namespace std;
 
 namespace Nektar
 {
+
 string UnsteadyDiffusion::className = GetEquationSystemFactory().
     RegisterCreatorFunction("UnsteadyDiffusion", UnsteadyDiffusion::create);
 
@@ -54,8 +55,8 @@ UnsteadyDiffusion::UnsteadyDiffusion(
 }
 
 /**
-* @brief Initialisation object for the unsteady diffusion problem.
-*/
+ * @brief Initialisation object for the unsteady diffusion problem.
+ */
 void UnsteadyDiffusion::v_InitObject()
 {
     UnsteadySystem::v_InitObject();
@@ -95,15 +96,15 @@ void UnsteadyDiffusion::v_InitObject()
     m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
 
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
-         "Only continuous Galerkin discretisation supported.");
+             "Only continuous Galerkin discretisation supported.");
 
     m_ode.DefineImplicitSolve(
         &UnsteadyDiffusion::DoImplicitSolve, this);
 }
 
 /**
-* @brief Unsteady diffusion problem destructor.
-*/
+ * @brief Unsteady diffusion problem destructor.
+ */
 UnsteadyDiffusion::~UnsteadyDiffusion()
 {
 }
@@ -122,12 +123,12 @@ void UnsteadyDiffusion::v_GenerateSummary(SummaryList& s)
 
 
 /**
-* @brief Compute the projection for the unsteady diffusion problem.
-*
-* @param inarray    Given fields.
-* @param outarray   Calculated solution.
-* @param time       Time.
-*/
+ * @brief Compute the projection for the unsteady diffusion problem.
+ *
+ * @param inarray    Given fields.
+ * @param outarray   Calculated solution.
+ * @param time       Time.
+ */
 void UnsteadyDiffusion::DoOdeProjection(
     const Array<OneD, const Array<OneD, NekDouble> > &inarray,
           Array<OneD,       Array<OneD, NekDouble> > &outarray,
@@ -147,8 +148,8 @@ void UnsteadyDiffusion::DoOdeProjection(
 }
 
 /**
-* @brief Implicit solution of the unsteady diffusion problem.
-*/
+ * @brief Implicit solution of the unsteady diffusion problem.
+ */
 void UnsteadyDiffusion::DoImplicitSolve(
     const Array<OneD, const Array<OneD, NekDouble> > &inarray,
           Array<OneD,       Array<OneD, NekDouble> > &outarray,
@@ -194,4 +195,5 @@ void UnsteadyDiffusion::DoImplicitSolve(
         m_fields[i]->SetPhysState(false);
     }
 }
+
 }
