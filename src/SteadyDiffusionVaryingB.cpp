@@ -144,7 +144,7 @@ void SteadyDiffusionVaryingB::v_DoSolve()
     StdRegions::ConstFactorMap factors;
     factors[StdRegions::eFactorLambda] = 0.0;
 
-    for (int i = 0; i < m_fields.num_elements(); ++i)
+    for (int i = 0; i < m_fields.size(); ++i)
     {
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
         Vmath::Zero(m_fields[i]->GetNpoints(), m_fields[i]->UpdatePhys(), 1);
@@ -152,7 +152,6 @@ void SteadyDiffusionVaryingB::v_DoSolve()
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
                                m_fields[i]->UpdateCoeffs(),
-                               NullFlagList,
                                factors,
                                m_varcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),

@@ -36,6 +36,8 @@
 #include <SolverUtils/Driver.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
 
+#include <LibUtilities/BasicUtils/Timer.h>
+
 using namespace Nektar;
 using namespace Nektar::SolverUtils;
 
@@ -54,8 +56,17 @@ int main(int argc, char *argv[])
         session->LoadSolverInfo("Driver", driverName, "Standard");
         auto drv = GetDriverFactory().CreateInstance(driverName, session, graph);
 
-        // Execute driver
-        drv->Execute();
+	LibUtilities::Timer timer;
+	timer.Start();
+
+	// Execute driver
+	drv->Execute();
+
+	timer.Stop();
+	timer.AccumulateRegion("Execute");
+
+	//Print out timings
+	LibUtilities::Timer::PrintElapsedRegions(session->GetComm());
 
         // Finalise session
         session->Finalise();

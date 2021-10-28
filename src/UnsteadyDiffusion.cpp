@@ -134,7 +134,7 @@ namespace Nektar
         const NekDouble time)
     {
         int i;
-        int nvariables = inarray.num_elements();
+        int nvariables = inarray.size();
         SetBoundaryConditions(time);
 
         Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
@@ -157,16 +157,24 @@ namespace Nektar
     {
         boost::ignore_unused(time);
 
-        StdRegions::ConstFactorMap factors;
+        StdRegions::ConstFactorMap m_factors;
 
-        int nvariables = inarray.num_elements();
+        int nvariables = inarray.size();
         int npoints    = m_fields[0]->GetNpoints();
-        factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsilon;
+        m_factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsilon;
+	// Set up variable coefficients
+        NekDouble ct = cos(m_theta), st = sin(m_theta);
+        NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
+        NekDouble d01 = (m_kpar - m_kperp) * ct * st;
+        NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
+        m_factors[StdRegions::eFactorCoeffD00] = d00;
+        m_factors[StdRegions::eFactorCoeffD01] = d01;
+        m_factors[StdRegions::eFactorCoeffD11] = d11;
 
         if(m_useSpecVanVisc)
         {
-            factors[StdRegions::eFactorSVVCutoffRatio] = m_sVVCutoffRatio;
-            factors[StdRegions::eFactorSVVDiffCoeff]   = m_sVVDiffCoeff/m_epsilon;
+            m_factors[StdRegions::eFactorSVVCutoffRatio] = m_sVVCutoffRatio;
+            m_factors[StdRegions::eFactorSVVDiffCoeff]   = m_sVVDiffCoeff/m_epsilon;
         }
 
         // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
@@ -177,15 +185,14 @@ namespace Nektar
         {
             // Multiply 1.0/timestep/lambda
             Vmath::Smul(npoints,
-                        -factors[StdRegions::eFactorLambda],
+                        -m_factors[StdRegions::eFactorLambda],
                         inarray[i], 1,
                         outarray[i], 1);
 
             // Solve a system of equations with Helmholtz solver
             m_fields[i]->HelmSolve(outarray[i],
                                    m_fields[i]->UpdateCoeffs(),
-		    	           NullFlagList,
-                                   factors,
+                                   m_factors,
                                    m_varcoeff);
 
             m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),

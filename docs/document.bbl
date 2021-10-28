@@ -1,0 +1,52 @@
+\begin{thebibliography}{1}
+
+\bibitem{cantwell2015nektar++}
+Chris~D Cantwell, David Moxey, Andrew Comerford, Alessandro Bolis, Gabriele
+  Rocco, Gianmarco Mengaldo, Daniele De~Grazia, Sergey Yakovlev, J-E Lombard,
+  Dirk Ekelschot, et~al.
+\newblock Nektar++: An open-source spectral/hp element framework.
+\newblock {\em Computer physics communications}, 192:205--219, 2015.
+
+\bibitem{dendy1995plasma}
+Richard~O. Dendy.
+\newblock {\em Plasma physics: an introductory course}.
+\newblock Cambridge University Press, 1995.
+
+\bibitem{goedbloed2004principles}
+JP~Hans Goedbloed, JP~Goedbloed, and Stefaan Poedts.
+\newblock {\em Principles of magnetohydrodynamics: with applications to
+  laboratory and astrophysical plasmas}.
+\newblock Cambridge university press, 2004.
+
+\bibitem{braginskii1965transport}
+S.~I. Braginskii.
+\newblock Transport processes in a plasma.
+\newblock {\em Reviews of plasma physics}, 1, 1965.
+
+\bibitem{morsenuclear}
+Edward Morse.
+\newblock {\em Nuclear Fusion}.
+\newblock Springer International Publishing, Cham.
+
+\bibitem{richardson20192019}
+Andrew~S Richardson.
+\newblock 2019 {NRL Plasma Formulary}.
+\newblock Technical report, US Naval Research Laboratory, 2019.
+
+\bibitem{spatschek2013high}
+Karl-Heinz Spatschek.
+\newblock {\em High temperature plasmas: theory and mathematical tools for
+  laser and fusion plasmas}.
+\newblock John Wiley \& Sons, 2013.
+
+\bibitem{arter2020}
+W.~Arter and R.~Akers.
+\newblock Excalibur equations for neptune proxyapps - draft.
+\newblock {\em Technical report}, 2020.
+
+\bibitem{karniadakis2013spectral}
+George Karniadakis and Spencer Sherwin.
+\newblock {\em Spectral/hp element methods for computational fluid dynamics}.
+\newblock Oxford University Press, 2013.
+
+\end{thebibliography}
