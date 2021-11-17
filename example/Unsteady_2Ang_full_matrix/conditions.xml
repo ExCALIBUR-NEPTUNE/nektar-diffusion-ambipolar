@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <NEKTAR>
-    <COLLECTIONS DEFAULT="MatrixFree" />
     <CONDITIONS>
         <PARAMETERS>
 	    <P> m_e 		= 9.1096e-31	    </P>

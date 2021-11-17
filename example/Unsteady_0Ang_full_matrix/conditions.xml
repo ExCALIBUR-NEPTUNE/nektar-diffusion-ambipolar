@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <NEKTAR>
-    <COLLECTIONS DEFAULT="MatrixFree" />
     <CONDITIONS>
         <PARAMETERS>
 	    <P> m_e 		= 9.1096e-31	    </P>
@@ -14,7 +13,7 @@
 	    <P> e		= 1.6022e-19	    </P>
 	    <P> k_B		= 1.3807e-23	    </P>
 	    <P> lambda		= 13.0		    </P>
-	    <P> theta 		= 2.0		    </P>
+	    <P> theta 		= 0.0		    </P>
 	    <P> n   		= 1e18 	  	    </P>
 	    <P> B   		= 1.0 	  	    </P>
 	    <P> k_par 		= 19.2 * sqrt(2.0 * PI^3.0) * (1.0/sqrt(m_e)) * (epsilon_0^2.0 / e^4.0) * (((k_B * T_e)^(5.0/2.0))/((Z^2.0) * lambda)) </P>
@@ -46,6 +45,7 @@
             <I PROPERTY="SuccessiveRHS"             VALUE=-10        />
           </V>
         </GLOBALSYSSOLNINFO>
+
 
         <VARIABLES>
             <V ID="0"> u </V>

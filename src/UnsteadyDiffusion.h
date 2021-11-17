@@ -95,6 +95,7 @@ namespace Nektar
  	NekDouble m_n;
 	NekDouble m_epsilon;
         StdRegions::VarCoeffMap m_varcoeff;
+	StdRegions::ConstFactorMap m_factors;
     };
 }
 

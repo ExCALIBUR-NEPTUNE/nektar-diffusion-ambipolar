@@ -61,8 +61,6 @@ namespace Nektar
     {
         EquationSystem::v_InitObject();
 
-        int npoints = m_fields[0]->GetNpoints();
-
         m_session->LoadParameter("k_par", m_kpar, 100.0);
         m_session->LoadParameter("k_perp", m_kperp, 1.0);
         m_session->LoadParameter("theta", m_theta, 5.0);
@@ -70,8 +68,42 @@ namespace Nektar
         // Convert to radians.
         m_theta *= -M_PI/180.0;
 
-        Array<OneD, NekDouble> xc(npoints), yc(npoints);
-        m_fields[0]->GetCoords(xc, yc);
+        m_factors[StdRegions::eFactorLambda] = 0.0;
+
+        NekDouble ct = cos(m_theta), st = sin(m_theta);
+        NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
+        NekDouble d01 = (m_kpar - m_kperp) * ct * st;
+        NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
+	
+	TiXmlDocument &doc = m_session->GetDocument();
+        TiXmlHandle docHandle(&doc);
+        TiXmlElement *master = docHandle.FirstChildElement("NEKTAR").Element();
+        TiXmlElement *xmlCol = master->FirstChildElement("COLLECTIONS");
+        // Check if user has specified some options
+        if (xmlCol){
+            const char *defaultImpl = xmlCol->Attribute("DEFAULT");
+            const std::string collinfo = string(defaultImpl);
+            if(collinfo != "MatrixFree"){
+                int nq = m_fields[0]->GetNpoints();
+                // Set up variable coefficients
+                m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+                m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+                m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+            }
+	    else{
+                // Set up constant coefficients
+        	m_factors[StdRegions::eFactorCoeffD00] = d00;
+        	m_factors[StdRegions::eFactorCoeffD01] = d01;
+        	m_factors[StdRegions::eFactorCoeffD11] = d11;
+            }
+        }
+        else{
+            int nq = m_fields[0]->GetNpoints();
+            // Set up variable coefficients
+            m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+            m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+            m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+        }
 
         ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
                  "Only continuous Galerkin discretisation supported.");
@@ -95,50 +127,6 @@ namespace Nektar
     void SteadyDiffusion::v_DoSolve()
     {
 
-        StdRegions::ConstFactorMap m_factors;
-        m_factors[StdRegions::eFactorLambda] = 0.0;
-
-	TiXmlDocument &doc = m_session->GetDocument();
-        TiXmlHandle docHandle(&doc);
-        TiXmlElement *master = docHandle.FirstChildElement("NEKTAR").Element();
-        TiXmlElement *xmlCol = master->FirstChildElement("COLLECTIONS");
-        // Check if user has specified some options
-        if (xmlCol){
-            const char *defaultImpl = xmlCol->Attribute("DEFAULT");
-            const std::string collinfo = string(defaultImpl);
-            if(collinfo != "MatrixFree"){
-                int nq = m_fields[0]->GetNpoints();
-                // Set up variable coefficients
-                NekDouble ct = cos(m_theta), st = sin(m_theta);
-                NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
-                NekDouble d01 = (m_kpar - m_kperp) * ct * st;
-                NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
-                m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-                m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-                m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
-            }
-	    else{
-                // Set up variable coefficients
-        	NekDouble ct = cos(m_theta), st = sin(m_theta);
-        	NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
-        	NekDouble d01 = (m_kpar - m_kperp) * ct * st;
-        	NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
-        	m_factors[StdRegions::eFactorCoeffD00] = d00;
-        	m_factors[StdRegions::eFactorCoeffD01] = d01;
-        	m_factors[StdRegions::eFactorCoeffD11] = d11;
-            }
-        }
-        else{
-            int nq = m_fields[0]->GetNpoints();
-            // Set up variable coefficients
-            NekDouble ct = cos(m_theta), st = sin(m_theta);
-            NekDouble d00 = (m_kpar - m_kperp) * ct * ct + m_kperp;
-            NekDouble d01 = (m_kpar - m_kperp) * ct * st;
-            NekDouble d11 = (m_kpar - m_kperp) * st * st + m_kperp;
-            m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-            m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-            m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
-        }
 
 
         for (int i = 0; i < m_fields.size(); ++i)

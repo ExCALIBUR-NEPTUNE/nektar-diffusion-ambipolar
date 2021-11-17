@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <NEKTAR>
-    <COLLECTIONS DEFAULT="MatrixFree" />
     <CONDITIONS>
         <PARAMETERS>
 	    <P> m_e 		= 9.1096e-31	    </P>
@@ -21,18 +20,13 @@
             <!--<P> k_perp 		= 1.0/(6.0*sqrt(PI^3.0))*1.0/m_i*(n*Z*e/(B*epsilon_0))^2.0*((m_p*A)^1.5*lambda)/sqrt(k_B*T_i) </P>-->
             <P> k_perp 		= 0.0               </P>
 	    <P> a		= 200.0             </P>
-	    <P> TimeStep        = 0.001             </P>
-	    <P> FinalTime	= 0.005		    </P>
-            <P> NumSteps        = FinalTime/TimeStep</P>
-	    <P> IO_CheckSteps   = 5              </P>
-            <P> IO_InfoSteps    = 5              </P>
         </PARAMETERS>
 
         <SOLVERINFO>
-            <I PROPERTY="EQTYPE"                VALUE="UnsteadyDiffusion"   />
+            <I PROPERTY="EQTYPE"                VALUE="SteadyDiffusion"   />
             <I PROPERTY="Projection"            VALUE="Continuous"        />
-            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"/>
-            <I PROPERTY="TimeIntegrationMethod" VALUE="BDFImplicitOrder1"   />
+            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"    />
+            <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
         </SOLVERINFO>
 
         <GLOBALSYSSOLNINFO>
@@ -43,7 +37,6 @@
             <I PROPERTY="MaxIterations"                 VALUE="1000"/>
             <I PROPERTY="GMRESMaxStorage"   VALUE=200       />
             <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
-            <I PROPERTY="SuccessiveRHS"             VALUE=-10        />
           </V>
         </GLOBALSYSSOLNINFO>
 

@@ -22,10 +22,10 @@
             <P> k_perp 		= 0.0               </P>
 	    <P> a		= 200.0             </P>
 	    <P> TimeStep        = 0.001             </P>
-	    <P> FinalTime	= 1		    </P>
+	    <P> FinalTime	= 0.005		    </P>
             <P> NumSteps        = FinalTime/TimeStep</P>
-	    <P> IO_CheckSteps   = 1000              </P>
-            <P> IO_InfoSteps    = 1000              </P>
+	    <P> IO_CheckSteps   = 5              </P>
+            <P> IO_InfoSteps    = 5              </P>
         </PARAMETERS>
 
         <SOLVERINFO>
@@ -38,12 +38,12 @@
         <GLOBALSYSSOLNINFO>
           <V VAR="u">
             <I PROPERTY="GlobalSysSoln"                 VALUE="IterativeFull" />
-            <I PROPERTY="LinSysIterSovler"              VALUE="ConjugateGradient"/>
+            <I PROPERTY="LinSysIterSovler"              VALUE="GMRES"/>
             <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
-            <I PROPERTY="MaxIterations"                 VALUE="2000"/>
-            <I PROPERTY="GMRESMaxStorage"   VALUE=500       />
+            <I PROPERTY="MaxIterations"                 VALUE="1000"/>
+            <I PROPERTY="GMRESMaxStorage"   VALUE=200       />
             <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
-            <I PROPERTY="SuccessiveRHS"             VALUE=-20        />
+            <I PROPERTY="SuccessiveRHS"             VALUE=-10        />
           </V>
         </GLOBALSYSSOLNINFO>
 
@@ -69,13 +69,13 @@
             <REGION REF="2">
                 <N VAR="u" VALUE="0" />
             </REGION>
-	    <REGION REF="3">
-                <D VAR="u" VALUE="5.0 + 5.0 * tanh(a*(y-0.125)) * tanh(a*(0.075-y))" />
+            <REGION REF="3">
+                <D VAR="u" VALUE="0.5 + 0.5 * tanh(a*(y-77)) * tanh(a*(23-y))" />
             </REGION>
         </BOUNDARYCONDITIONS>
 
-	<FUNCTION NAME="ExactSolution">
-		<E VAR="u" VALUE="5.0 + 5.0 * tanh(a*(y-0.125+tan(2.0*PI/180.0)*x)) * tanh(a*(0.075-y-tan(2.0*PI/180.0)*x))"/>
+        <FUNCTION NAME="ExactSolution">
+                <E VAR="u" VALUE="0.5 + 0.5 * tanh(a*(y-77+tan(2.0*PI/180.0)*x)) * tanh(a*(23-y-tan(2.0*PI/180.0)*x))"/>
         </FUNCTION>
 
         <FUNCTION NAME="InitialConditions">

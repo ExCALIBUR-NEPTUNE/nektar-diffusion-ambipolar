@@ -77,6 +77,7 @@ namespace Nektar
         NekDouble m_kpar;
         NekDouble m_theta;
         StdRegions::VarCoeffMap m_varcoeff;
+	StdRegions::ConstFactorMap m_factors;
     };
 }
 
