@@ -42,43 +42,43 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-    class SteadyDiffusion : public EquationSystem
+class SteadyDiffusion : public EquationSystem
+{
+public:
+    friend class MemoryManager<SteadyDiffusion>;
+
+    /// Creates an instance of this class
+    static EquationSystemSharedPtr create(
+        const LibUtilities::SessionReaderSharedPtr& pSession,
+        const SpatialDomains::MeshGraphSharedPtr& pGraph)
     {
-    public:
-        friend class MemoryManager<SteadyDiffusion>;
+        EquationSystemSharedPtr p = MemoryManager<SteadyDiffusion>
+            ::AllocateSharedPtr(pSession, pGraph);
+        p->InitObject();
+        return p;
+    }
+    /// Name of class
+    static std::string className;
 
-        /// Creates an instance of this class
-        static EquationSystemSharedPtr create(
-            const LibUtilities::SessionReaderSharedPtr& pSession,
-            const SpatialDomains::MeshGraphSharedPtr& pGraph)
-        {
-            EquationSystemSharedPtr p = MemoryManager<SteadyDiffusion>
-                ::AllocateSharedPtr(pSession, pGraph);
-            p->InitObject();
-            return p;
-        }
-        /// Name of class
-        static std::string className;
+    /// Destructor
+    virtual ~SteadyDiffusion();
 
-        /// Destructor
-        virtual ~SteadyDiffusion();
+protected:
+    SteadyDiffusion(
+        const LibUtilities::SessionReaderSharedPtr& pSession,
+        const SpatialDomains::MeshGraphSharedPtr& pGraph);
 
-    protected:
-        SteadyDiffusion(
-            const LibUtilities::SessionReaderSharedPtr& pSession,
-            const SpatialDomains::MeshGraphSharedPtr& pGraph);
+    virtual void v_InitObject();
+    virtual void v_GenerateSummary(SolverUtils::SummaryList& s);
+    virtual void v_DoSolve();
 
-        virtual void v_InitObject();
-        virtual void v_GenerateSummary(SolverUtils::SummaryList& s);
-        virtual void v_DoSolve();
-
-    private:
-        NekDouble m_kperp;
-        NekDouble m_kpar;
-        NekDouble m_theta;
-        StdRegions::VarCoeffMap m_varcoeff;
-	StdRegions::ConstFactorMap m_factors;
-    };
+private:
+    NekDouble m_kperp;
+    NekDouble m_kpar;
+    NekDouble m_theta;
+    StdRegions::VarCoeffMap m_varcoeff;
+    StdRegions::ConstFactorMap m_factors;
+};
 }
 
 #endif

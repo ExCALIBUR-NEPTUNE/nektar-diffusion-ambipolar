@@ -4,7 +4,7 @@
   </a>
 </div>
 <div align="center">
-  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/LICENSE.txt" target="_blank">
+  <a href="LICENSE.txt" target="_blank">
     <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
   </a>
 </div>
@@ -15,61 +15,65 @@
 
   * [Description](#description)
   * [Installation and dependencies](#installation-and-dependencies)
-    * [Installing Nektar++ from source](#installing-nektar++-from-source)
-    * [Installing proxy-app](#installing-proxy-app)
+    * [Docker](#docker)
+    * [Using Nektar++ binary packages](#using-nektar-binary-packages)
+    * [Using Nektar++ source code](#using-nektar-source-code)
   * [Execution](#execution)
   * [Parameters](#parameters)
   * [References](#references)
   * [License](#license)
 
 ## Description
-**Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework[(Cantwell et al 2015)](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder. For the detailed formulations and tutorials of Nektar++, please refer to the user-guide and developer-guide at the home page of [Nektar++](https://www.nektar.info/). Some examples are provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder. 
+**Nektar-diffusion proxy-app**: An anisotropic thermal conduction proxy-app for the magnetized plasma written in Nektar++ framework [[1]](#cantwell-et-al-2015). The derivation of the anisotropic thermal conduction in the magnetized plasma and its variational formulation are documented in the `docs` folder. For the detailed formulations and tutorials of Nektar++, please refer to the documentation on the [Nektar++ website](https://www.nektar.info/). Some examples are provided in the `example` folder. 
 
 The variational formulation of the two-dimensional anisotropic thermal conduction in the magnetized plasma can be written as
 
-<div align="center">
-  <a href="https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs" target="_blank" >
-    <img alt="variational_formulation" src="readme/equation.jpg" width="350" />
-  </a>
-</div>
+![Variational formulation](/readme/equation.jpg)
 
 where $`\psi`$ and $`T`$ respectively are the test function and the temperature. $`\bm{\kappa}_c`$ is the anisotropic thermal conductivity tensor and $`Q`$ represents the heat source in field. $`\bm{n}`$ is the outward normal vector along the boundaries of the domain.
 
 
 ## Installation and dependencies
-The compilation of Nektar-diffusion proxy-app requires a C++ compiler, `CMake` and `Nektar++`. To successfully compile and install `Nektar++`, the following programs and libraries are also necessary: `Scotch`, `Boost`, `Flex`, `TinyXML` (for parsing parameters and setting up simulation), `Blas` and `Lapack` (for linear algebra). Some of these are required and must be installed prior to compiling `Nektar++`, most of which are available as pre-built system packages on most Linux distributions, installed manually by a user (typically the development packages with a *-dev* or *-devel* suffix is required) or can be downloaded and compiled by Nektar++ automatically (by specifying the flags of configuration), e.g., `TinyXML` and `Scotch`. It is important to make sure that the directory of their executables are included in the searching path of the system.
+The Nektar-diffusion proxy-app should be compiled against Nektar++ v5.0.3. This can be done by either using pre-compiled binary packages or compiling it from source. Alternatively a Dockerfile image can be generated which includes Nektar++, the nektar-diffusion proxy-app and the included examples.
 
-In addition, `Nektar++` can be installed with some optional packages in order to initiate a range of features: `OpenMPI` (for parallel computing), `HDF5` (for large-scale data storage and parallel input/outoput), `METIS` (for domain partitioning), `PETSc` (for extra solvers) and `FFTW` (for Fast Fourier Transforms). 
-
-The typtical procedures of installation are presented below. It is recommended to use the pre-built packages, e.g., `OpenMPI`, in the system, especially compiling `Nektar++` on the cluster. It is assumed that the installation is done on a linux system or a cluster. For the additional information on the options of configuration and the full range of different features, please refer to the user-guide of [Nektar++](https://www.nektar.info/getting-started/documentation/).
-
-### Installing Nektar++ from source
-Clone the repository of `Nektar++` from [https://gitlab.nektar.info/nektar/nektar](https://gitlab.nektar.info/nektar/nektar) or download the tarball of `Nektar++` from [https://www.nektar.info/downloads/](https://www.nektar.info/downloads/) and put it into the home directory (**$HOME**). Assuming the name of the tarball is **nektar-5.0.2.tar.gz**, execute the following commands to install `Nektar++` into the default directory ($HOME/nektar-5.0.2/build/dist):
-
+### Docker
+To use the docker image, clone the nektar-diffusion repository and, from the top directory, build the image using
 ```bash
->tar -xvzf $HOME/nektar-5.0.2.tar.gz
->cd $HOME/nektar-5.0.2
->mkdir build && cd build 
->cmake -DNEKTAR_USE_MPI=ON -DNEKTAR_USE_SCOTCH=ON -DNEKTAR_USE_SYSTEM_BLAS_LAPACK=ON -DNEKTAR_USE_HDF5=ON -DTHIRDPARTY_BUILD_TINYXML=ON ..
->make -j 4 install
->ctest
+docker build -t nektar-diffusion .
+```
+and then run an interactive shell
+```bash
+docker run -it nektar-diffusion /bin/bash
 ```
 
-The command *ctest* is used to run a series of testing cases to verify the correct installation.   
+### Using Nektar++ binary packages
+Install CMake using your normal package management tools.
 
-**Curses interface:** 
+Install the v5.0.3 `libnektar++-dev` or `libnektar++-devel` package (as appropriate), following instructions at https://www.nektar.info.
 
-Alternatively, to specify the full range of flags of configuration using the curses interface to `CMake`, the following commands can be executed to install `Nektar++`:
-
+Then compile the nektar-diffusion solver using
 ```bash
->tar -xvzf $HOME/nektar-5.0.2.tar.gz
->cd $HOME/nektar-5.0.2
->mkdir build && cd build 
->ccmake ..
->make -j 4 install
->ctest
+mkdir build && cd build
+cmake ..
+make install
 ```
-By executing the command *ccmake ..*, all flags of configuration are listed and displayed. For a typical installation, the following flags, NEKTAR_USE_MPI, NEKTAR_USE_SCOTCH, NEKTAR_USE_SYSTEM_BLAS_LAPACK and NEKTAR_USE_HDF5, should be switched on by pressing *enter* key. Subsequently, pressing *c* key until the option *Press [g] to generate and exit* appears. Finally, press *g* to generate the configuration file.  
+
+### Using Nektar++ source code
+Download the source code for Nektar++ v5.0.3
+```bash
+git clone https://gitlab.nektar.info/nektar/nektar
+cd nektar
+git checkout v5.0.3
+```
+Compile it following the instructions at [https://www.nektar.info](https://www.nektar.info). To save time, set NEKTAR_BUILD_SOLVERS=OFF and NEKTAR_BUILD_DEMOS=OFF. Many of the dependencies are available as pre-built packages in most Linux distributions (e.g. Boost, TinyXML, Scotch, BLAS, LAPACK). It is recommended to turn on the NEKTAR_USE_MPI option to enable parallel execution. Run `make install` to collate the binaries and library files under the `dist` sub-directory and (optionally) set CMAKE_INSTALL_PREFIX to your preferred install location. To check Nektar++ is built correctly run `ctest`.
+
+Then compile the nektar-diffusion solver using
+```bash
+mkdir build && cd build
+cmake -DNektar++_DIR=/path/to/build/dist/lib/nektar++/cmake -DNEKTAR_BUILD_DOCS=ON ..
+make install
+```
+where `/path/to/build/dist/lib/nektar++/cmake` is the path containing the *Nektar++Config.cmake* file.
 
 **Debugging compilation, installation and testing:**
 
@@ -79,66 +83,46 @@ If an error was observed during installation, take note the description of this 
 
 If some testing cases fail during *ctest*, check the log files in the **$HOME/nektar-v5.0.2/build/Testing/Temporary/** folder and identify the origin of the error.
 
-### Installing proxy-app
-Clone the repository of Nektar-diffusion proxy-app from [https://gitlab.nektar.info/neptune/nektar-diffusion](https://gitlab.nektar.info/neptune/nektar-diffusion) and put it into the home directory (**$HOME**). Assuming the name of the cloned repository is **nektar-diffusion**, execute the following commands to install the Nektar-diffusion proxy-app into the default directory ($HOME/nektar-diffusion/build/dist):
-
-```bash
->cd $HOME/nektar-diffusion
->mkdir build && cd build 
->cmake -DNektar++_DIR=$HOME/nektar-v5.0.2/build  -DNEKTAR_BUILD_DOCS=ON ..
->make document-pdf
->make -j 4 install
-```
-
-*DNektar++_DIR* should be the directory containing either *Nektar++Config.cmake* or *nektar++-config.cmake*. In this case, it is *$HOME/nektar-v5.0.2/build*. The *DNEKTAR_BUILD_DOCS=ON* enables the build of the latex files in the the [docs](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/docs) folder, which documents the variational formulation of the two-dimensional anisotropic thermal conduction and the key parameters. Therefore the document.pdf in **docs** folder can be built by *make document-pdf*. To build these latex files, `TexLive` should be installed a prior and its executables are searchable in the PATH of the system.
-
-**Curses interface:** 
-
-Alternatively, the proxy-app can be installed using the curses interface to `CMake`:
-
-```bash
->cd $HOME/nektar-diffusion
->mkdir build && cd build 
->ccmake  ..
->make document-pdf
->make -j 4 install
-```
-
-While configuring the proxy-app with *ccmake ..*, define *Nektar++_DIR=~/nektar-v5.0.2/build* and/or *NEKTAR_BUILD_DOCS=ON*, press *c* key and press *g* key to generate the configuration file.
-
 ## Execution
-In the provided examples, the mesh is prepared using [gmsh](https://gmsh.info/). It can be installed by
-
+If Nektar++ has been compiled from source, it is convenient to add the location of the binary files to the system PATH:
 ```bash
->cd $HOME
->wget https://gmsh.info/bin/Linux/gmsh-2.16.0-Linux64.tgz
->tar -xvzf gmsh-2.16.0-Linux64.tgz
->cd gmsh-2.16.0-Linux
->echo 'PATH=$HOME/gmsh-2.16.0-Linux/bin:$PATH' >> $HOME/.bashrc
->source $HOME/.bashrc
+export PATH="$PATH:/path/to/nektar++/build/dist/bin"
 ```
 
- To run the examples provided in the [example](https://gitlab.nektar.info/neptune/nektar-diffusion/-/tree/steady_b/example) folder, access the folder containing a particular example and execute the following command:
+In the provided examples, the mesh is prepared using [gmsh](https://gmsh.info/). However, the Nektar++ meshes are also provided.
+
+To modify the mesh, Gmsh is required. It can be installed by using binary packages provided the Linux distribution or compiling from source by running
+
+```bash
+cd $HOME
+wget https://gmsh.info/bin/Linux/gmsh-2.16.0-Linux64.tgz
+tar -xvzf gmsh-2.16.0-Linux64.tgz
+cd gmsh-2.16.0-Linux
+echo 'PATH=$HOME/gmsh-2.16.0-Linux/bin:$PATH' >> $HOME/.bashrc
+source $HOME/.bashrc
+```
+
+To run the examples provided in the [example](example) folder, access the folder containing a particular example and execute the following command:
 
 1. **convert mesh**
 
 ```bash
->gmsh -2 -order 1 domain.geo
->$HOME/nektar-v5.0.2/build/dist/bin/NekMesh domain.msh domain.xml
+gmsh -2 -order 1 domain.geo
+NekMesh domain.msh domain.xml
 ```
 
 2. **execute simulation**
 
 ```bash
->mpirun -np 4 $HOME/nektar-diffusion/build/dist/DiffusionSolver domain.xml conditions.xml
+mpirun -np 4 DiffusionSolver domain.xml conditions.xml
 ```
 
 3. **post-processing**
 
 ```bash
->$HOME/nektar-v5.0.2/build/dist/bin/FieldConvert domain.xml domain.fld domain.dat
+FieldConvert domain.xml domain.fld domain.vtu
 ```
-The output file format is in *.dat* (tecplot file). To view the results in paraview, change *.dat* to *.vtu*.
+The output file format is in *.vtu* (VTK file) which can be visualised in Paraview.
 
 ## Parameters
 The key parameters to set up the simulation are listed below:
@@ -164,9 +148,7 @@ Typically the angle and magnitude of the magnetic field should be specified a pr
 
 ## References
 
-#### (Cantwell et al 2015) 
-*Nektar++: An open-source spectral/hp
-element framework.* [[DOI](https://doi.org/10.1016/j.cpc.2015.02.008)]
+<a name="cantwell-et-al-2015"></a>\[1\] Cantwell et al, *Nektar++: An open-source spectral/hp element framework.*, JCP, 2015 [[DOI](https://doi.org/10.1016/j.cpc.2015.02.008)]
 
 ## License
 
