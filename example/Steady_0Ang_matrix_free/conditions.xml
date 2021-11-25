@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <NEKTAR>
+    <COLLECTIONS DEFAULT="MatrixFree" />
     <CONDITIONS>
         <PARAMETERS>
 	    <P> m_e 		= 9.1096e-31	    </P>
@@ -24,22 +25,17 @@
 
         <SOLVERINFO>
             <I PROPERTY="EQTYPE"                VALUE="SteadyDiffusion"   />
-	    <I PROPERTY="Projection"            VALUE="Continuous"        />
-	    <I PROPERTY="GlobalSysSoln"		VALUE="XxtMultiLevelStaticCond"/>
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeMultiLevelStaticCond" />-->
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"    />-->
+            <I PROPERTY="Projection"            VALUE="Continuous"        />
+            <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
         </SOLVERINFO>
 
-	<GLOBALSYSSOLNINFO>
+        <GLOBALSYSSOLNINFO>
           <V VAR="u">
-	    <I PROPERTY="GlobalSysSoln"		VALUE="XxtMultiLevelStaticCond"/>
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeMultiLevelStaticCond" />-->
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"    />-->
-	    <I PROPERTY="LinSysIterSolver"              VALUE="GMRES"/>
-	    <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
-	    <I PROPERTY="MaxIterations"                 VALUE="1000"/>
-	    <I PROPERTY="GMRESMaxStorage"   VALUE=200       />
-	    <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
+            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull" />
+            <I PROPERTY="LinSysIterSolver"      VALUE="ConjugateGradient"/>
+            <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
+            <I PROPERTY="MaxIterations"         VALUE="10000"/>
+            <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-6"/>
           </V>
         </GLOBALSYSSOLNINFO>
 

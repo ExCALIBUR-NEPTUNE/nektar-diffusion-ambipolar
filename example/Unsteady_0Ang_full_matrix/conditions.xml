@@ -20,28 +20,31 @@
             <!--<P> k_perp 		= 1.0/(6.0*sqrt(PI^3.0))*1.0/m_i*(n*Z*e/(B*epsilon_0))^2.0*((m_p*A)^1.5*lambda)/sqrt(k_B*T_i) </P>-->
             <P> k_perp 		= 0.0               </P>
 	    <P> a		= 200.0             </P>
+	    <P> TimeStep        = 0.001             </P>
+	    <P> FinalTime	= 0.005		    </P>
+            <P> NumSteps        = FinalTime/TimeStep</P>
+	    <P> IO_CheckSteps   = 5              </P>
+            <P> IO_InfoSteps    = 5              </P>
         </PARAMETERS>
 
         <SOLVERINFO>
-            <I PROPERTY="EQTYPE"                VALUE="SteadyDiffusion"   />
-	    <I PROPERTY="Projection"            VALUE="Continuous"        />
-	    <I PROPERTY="GlobalSysSoln"		VALUE="XxtMultiLevelStaticCond"/>
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeMultiLevelStaticCond" />-->
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"    />-->
+            <I PROPERTY="EQTYPE"                VALUE="UnsteadyDiffusion"   />
+            <I PROPERTY="Projection"            VALUE="Continuous"        />
+            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"/>
+            <I PROPERTY="TimeIntegrationMethod" VALUE="BDFImplicitOrder1"   />
         </SOLVERINFO>
 
-	<GLOBALSYSSOLNINFO>
+        <GLOBALSYSSOLNINFO>
           <V VAR="u">
-	    <I PROPERTY="GlobalSysSoln"		VALUE="XxtMultiLevelStaticCond"/>
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeMultiLevelStaticCond" />-->
-	    <!--<I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"    />-->
-	    <I PROPERTY="LinSysIterSolver"              VALUE="GMRES"/>
-	    <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
-	    <I PROPERTY="MaxIterations"                 VALUE="1000"/>
-	    <I PROPERTY="GMRESMaxStorage"   VALUE=200       />
-	    <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
+            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull" />
+            <I PROPERTY="LinSysIterSolver"      VALUE="ConjugateGradient"/>
+            <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
+            <I PROPERTY="MaxIterations"         VALUE="1000"/>
+            <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
+            <I PROPERTY="SuccessiveRHS"             VALUE=-10        />
           </V>
         </GLOBALSYSSOLNINFO>
+
 
         <VARIABLES>
             <V ID="0"> u </V>

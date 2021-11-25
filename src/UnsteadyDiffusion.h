@@ -88,14 +88,15 @@ protected:
         NekDouble time,
         NekDouble lambda);
 
-private:
-    NekDouble m_kperp;
-    NekDouble m_kpar;
-    NekDouble m_theta;
-    NekDouble m_n;
-    NekDouble m_epsilon;
-    StdRegions::VarCoeffMap m_varcoeff;
-};
+    private:
+        NekDouble m_kperp;
+        NekDouble m_kpar;
+        NekDouble m_theta;
+        NekDouble m_n;
+        NekDouble m_epsilon;
+        StdRegions::VarCoeffMap m_varcoeff;
+        StdRegions::ConstFactorMap m_factors;
+    };
 }
 
 #endif

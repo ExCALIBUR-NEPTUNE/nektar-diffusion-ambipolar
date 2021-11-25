@@ -36,6 +36,7 @@
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <iostream>
 #include <iomanip>
+#include <tinyxml.h>
 
 #include <boost/core/ignore_unused.hpp>
 
@@ -84,16 +85,47 @@ void UnsteadyDiffusion::v_InitObject()
     Array<OneD, NekDouble> xc(npoints), yc(npoints);
     m_fields[0]->GetCoords(xc, yc);
 
-    int nq = m_fields[0]->GetNpoints();
+    if(m_useSpecVanVisc)
+    {
+        m_factors[StdRegions::eFactorSVVCutoffRatio] = m_sVVCutoffRatio;
+        m_factors[StdRegions::eFactorSVVDiffCoeff]   = m_sVVDiffCoeff/m_epsilon;
+    }
 
-    // Set up variable coefficients
     NekDouble ct = cos(m_theta), st = sin(m_theta);
     NekDouble d00 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * ct + m_kperp);
-    NekDouble d01 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * st);
+    NekDouble d01 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * ct * st); 
     NekDouble d11 = (2.0 / (3.0 * m_n)) * ((m_kpar - m_kperp) * st * st + m_kperp);
-    m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-    m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-    m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+
+    TiXmlDocument &doc = m_session->GetDocument();
+    TiXmlHandle docHandle(&doc);
+    TiXmlElement *master = docHandle.FirstChildElement("NEKTAR").Element();
+    TiXmlElement *xmlCol = master->FirstChildElement("COLLECTIONS");
+
+    // Check if user has specified some options
+    if (xmlCol){
+        const char *defaultImpl = xmlCol->Attribute("DEFAULT");
+        const std::string collinfo = string(defaultImpl);
+        if(collinfo != "MatrixFree"){
+            int nq = m_fields[0]->GetNpoints();
+            // Set up variable coefficients
+            m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+            m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+            m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+        }
+        else{
+            // Set up constant coefficients
+            m_factors[StdRegions::eFactorCoeffD00] = d00;
+            m_factors[StdRegions::eFactorCoeffD01] = d01;
+            m_factors[StdRegions::eFactorCoeffD11] = d11;
+        }
+    }
+    else{
+        int nq = m_fields[0]->GetNpoints();
+        // Set up variable coefficients
+        m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
+        m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
+        m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+    }
 
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
              "Only continuous Galerkin discretisation supported.");
@@ -135,7 +167,7 @@ void UnsteadyDiffusion::DoOdeProjection(
     const NekDouble time)
 {
     int i;
-    int nvariables = inarray.num_elements();
+    int nvariables = inarray.size();
     SetBoundaryConditions(time);
 
     Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
@@ -160,7 +192,7 @@ void UnsteadyDiffusion::DoImplicitSolve(
 
     StdRegions::ConstFactorMap factors;
 
-    int nvariables = inarray.num_elements();
+    int nvariables = inarray.size();
     int npoints    = m_fields[0]->GetNpoints();
     factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsilon;
 
@@ -178,15 +210,14 @@ void UnsteadyDiffusion::DoImplicitSolve(
     {
         // Multiply 1.0/timestep/lambda
         Vmath::Smul(npoints,
-                    -factors[StdRegions::eFactorLambda],
+                    -m_factors[StdRegions::eFactorLambda],
                     inarray[i], 1,
                     outarray[i], 1);
 
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(outarray[i],
                                m_fields[i]->UpdateCoeffs(),
-                               NullFlagList,
-                               factors,
+                               m_factors,
                                m_varcoeff);
 
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
