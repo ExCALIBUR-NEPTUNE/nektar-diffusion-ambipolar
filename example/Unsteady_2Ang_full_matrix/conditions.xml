@@ -36,15 +36,15 @@
 
         <GLOBALSYSSOLNINFO>
           <V VAR="u">
-            <I PROPERTY="GlobalSysSoln"                 VALUE="IterativeFull" />
-            <I PROPERTY="LinSysIterSovler"              VALUE="GMRES"/>
+            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull" />
+            <I PROPERTY="LinSysIterSolver"      VALUE="ConjugateGradient"/>
             <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
-            <I PROPERTY="MaxIterations"                 VALUE="1000"/>
-            <I PROPERTY="GMRESMaxStorage"   VALUE=200       />
+            <I PROPERTY="MaxIterations"         VALUE="1000"/>
             <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
             <I PROPERTY="SuccessiveRHS"             VALUE=-10        />
           </V>
         </GLOBALSYSSOLNINFO>
+
 
         <VARIABLES>
             <V ID="0"> u </V>

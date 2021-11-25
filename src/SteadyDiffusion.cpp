@@ -129,9 +129,6 @@ void SteadyDiffusion::v_GenerateSummary(SummaryList& s)
  */
 void SteadyDiffusion::v_DoSolve()
 {
-    StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorLambda] = 0.0;
-
     for (int i = 0; i < m_fields.size(); ++i)
     {
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);

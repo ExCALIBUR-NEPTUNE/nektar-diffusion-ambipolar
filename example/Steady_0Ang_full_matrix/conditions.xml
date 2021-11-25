@@ -25,18 +25,16 @@
         <SOLVERINFO>
             <I PROPERTY="EQTYPE"                VALUE="SteadyDiffusion"   />
             <I PROPERTY="Projection"            VALUE="Continuous"        />
-            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull"    />
             <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
         </SOLVERINFO>
 
         <GLOBALSYSSOLNINFO>
           <V VAR="u">
-            <I PROPERTY="GlobalSysSoln"                 VALUE="IterativeFull" />
-            <I PROPERTY="LinSysIterSovler"              VALUE="GMRES"/>
+            <I PROPERTY="GlobalSysSoln"         VALUE="IterativeFull" />
+            <I PROPERTY="LinSysIterSolver"      VALUE="ConjugateGradient"/>
             <I PROPERTY="Preconditioner"        VALUE="Diagonal"        />
-            <I PROPERTY="MaxIterations"                 VALUE="1000"/>
-            <I PROPERTY="GMRESMaxStorage"   VALUE=200       />
-            <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-3"/>
+            <I PROPERTY="MaxIterations"         VALUE="10000"/>
+            <I PROPERTY="IterativeSolverTolerance"  VALUE="1e-6"/>
           </V>
         </GLOBALSYSSOLNINFO>
 
