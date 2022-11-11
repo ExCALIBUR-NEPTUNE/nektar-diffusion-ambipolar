@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusion.h
+// File: SteadyDiffusion.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,15 +28,15 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Unsteady diffusion solve routines
+// Description: Steady diffusion solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYDIFFUSION_H
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYDIFFUSION_H
 
-#include <SolverUtils/UnsteadySystem.h>
 #include <SolverUtils/Diffusion/Diffusion.h>
+#include <SolverUtils/UnsteadySystem.h>
 
 using namespace Nektar::SolverUtils;
 
@@ -49,11 +49,11 @@ public:
 
     /// Creates an instance of this class
     static EquationSystemSharedPtr create(
-        const LibUtilities::SessionReaderSharedPtr& pSession,
-        const SpatialDomains::MeshGraphSharedPtr& pGraph)
+        const LibUtilities::SessionReaderSharedPtr &pSession,
+        const SpatialDomains::MeshGraphSharedPtr &pGraph)
     {
-        EquationSystemSharedPtr p = MemoryManager<SteadyDiffusion>
-            ::AllocateSharedPtr(pSession, pGraph);
+        EquationSystemSharedPtr p =
+            MemoryManager<SteadyDiffusion>::AllocateSharedPtr(pSession, pGraph);
         p->InitObject();
         return p;
     }
@@ -64,13 +64,12 @@ public:
     virtual ~SteadyDiffusion();
 
 protected:
-    SteadyDiffusion(
-        const LibUtilities::SessionReaderSharedPtr& pSession,
-        const SpatialDomains::MeshGraphSharedPtr& pGraph);
+    SteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
+                    const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject();
-    virtual void v_GenerateSummary(SolverUtils::SummaryList& s);
-    virtual void v_DoSolve();
+    virtual void v_InitObject(bool DeclareField = true) override;
+    virtual void v_GenerateSummary(SolverUtils::SummaryList &s) override;
+    virtual void v_DoSolve() override;
 
 private:
     NekDouble m_kperp;
@@ -79,6 +78,6 @@ private:
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::ConstFactorMap m_factors;
 };
-}
+} // namespace Nektar
 
 #endif

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: DriftWaveSolver.cpp
+// File: DriftDiffusionSolver.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -33,8 +33,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <SolverUtils/Driver.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
+#include <SolverUtils/Driver.h>
 
 #include <LibUtilities/BasicUtils/Timer.h>
 
@@ -54,28 +54,29 @@ int main(int argc, char *argv[])
         // Create driver.
         std::string driverName;
         session->LoadSolverInfo("Driver", driverName, "Standard");
-        auto drv = GetDriverFactory().CreateInstance(driverName, session, graph);
+        auto drv =
+            GetDriverFactory().CreateInstance(driverName, session, graph);
 
-	LibUtilities::Timer timer;
-	timer.Start();
+        LibUtilities::Timer timer;
+        timer.Start();
 
-	// Execute driver
-	drv->Execute();
+        // Execute driver
+        drv->Execute();
 
-	timer.Stop();
-	timer.AccumulateRegion("Execute");
+        timer.Stop();
+        timer.AccumulateRegion("Execute");
 
-	//Print out timings
-	LibUtilities::Timer::PrintElapsedRegions(session->GetComm());
+        // Print out timings
+        LibUtilities::Timer::PrintElapsedRegions(session->GetComm());
 
         // Finalise session
         session->Finalise();
     }
-    catch (const std::runtime_error& e)
+    catch (const std::runtime_error &e)
     {
         return 1;
     }
-    catch (const std::string& eStr)
+    catch (const std::string &eStr)
     {
         std::cout << "Error: " << eStr << std::endl;
     }

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusion.cpp
+// File: SteadyDiffusion.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,14 +28,14 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Unsteady diffusion solve routines
+// Description: Steady diffusion solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "SteadyDiffusion.h"
 #include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <tinyxml.h>
 
 #include <boost/core/ignore_unused.hpp>
@@ -44,29 +44,30 @@ using namespace std;
 
 namespace Nektar
 {
-string SteadyDiffusion::className = GetEquationSystemFactory().
-    RegisterCreatorFunction("SteadyDiffusion", SteadyDiffusion::create);
+string SteadyDiffusion::className =
+    GetEquationSystemFactory().RegisterCreatorFunction("SteadyDiffusion",
+                                                       SteadyDiffusion::create);
 
 SteadyDiffusion::SteadyDiffusion(
-    const LibUtilities::SessionReaderSharedPtr& pSession,
-    const SpatialDomains::MeshGraphSharedPtr& pGraph)
+    const LibUtilities::SessionReaderSharedPtr &pSession,
+    const SpatialDomains::MeshGraphSharedPtr &pGraph)
     : EquationSystem(pSession, pGraph)
 {
 }
 
 /**
- * @brief Initialisation object for the unsteady diffusion problem.
+ * @brief Initialisation object for the steady diffusion problem.
  */
-void SteadyDiffusion::v_InitObject()
+void SteadyDiffusion::v_InitObject(bool DeclareField)
 {
-    EquationSystem::v_InitObject();
+    EquationSystem::v_InitObject(DeclareField);
 
     m_session->LoadParameter("k_par", m_kpar, 100.0);
     m_session->LoadParameter("k_perp", m_kperp, 1.0);
     m_session->LoadParameter("theta", m_theta, 5.0);
 
     // Convert to radians.
-    m_theta *= -M_PI/180.0;
+    m_theta *= -M_PI / 180.0;
 
     m_factors[StdRegions::eFactorLambda] = 0.0;
 
@@ -81,15 +82,20 @@ void SteadyDiffusion::v_InitObject()
     TiXmlElement *xmlCol = master->FirstChildElement("COLLECTIONS");
 
     // Check if user has specified some options
-    if (xmlCol){
-        const char *defaultImpl = xmlCol->Attribute("DEFAULT");
-        const std::string collinfo = string(defaultImpl);
-        if(collinfo != "MatrixFree"){
+    if (xmlCol)
+    {
+        const char *defaultImpl    = xmlCol->Attribute("DEFAULT");
+        const std::string collinfo = defaultImpl ? string(defaultImpl) : "";
+        if (collinfo != "MatrixFree")
+        {
             int nq = m_fields[0]->GetNpoints();
             // Set up variable coefficients
-            m_varcoeff[StdRegions::eVarCoeffD00] = Array<OneD, NekDouble>(nq, d00);
-            m_varcoeff[StdRegions::eVarCoeffD01] = Array<OneD, NekDouble>(nq, d01);
-            m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
+            m_varcoeff[StdRegions::eVarCoeffD00] =
+                Array<OneD, NekDouble>(nq, d00);
+            m_varcoeff[StdRegions::eVarCoeffD01] =
+                Array<OneD, NekDouble>(nq, d01);
+            m_varcoeff[StdRegions::eVarCoeffD11] =
+                Array<OneD, NekDouble>(nq, d11);
         }
         else
         {
@@ -113,19 +119,19 @@ void SteadyDiffusion::v_InitObject()
 }
 
 /**
- * @brief Unsteady diffusion problem destructor.
+ * @brief Steady diffusion problem destructor.
  */
 SteadyDiffusion::~SteadyDiffusion()
 {
 }
 
-void SteadyDiffusion::v_GenerateSummary(SummaryList& s)
+void SteadyDiffusion::v_GenerateSummary(SummaryList &s)
 {
     EquationSystem::v_GenerateSummary(s);
 }
 
 /**
- * @brief Implicit solution of the unsteady diffusion problem.
+ * @brief Implicit solution of the steady diffusion problem.
  */
 void SteadyDiffusion::v_DoSolve()
 {
@@ -136,11 +142,10 @@ void SteadyDiffusion::v_DoSolve()
 
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                                   m_fields[i]->UpdateCoeffs(),
-                                   m_factors,
-                                   m_varcoeff);
+                               m_fields[i]->UpdateCoeffs(), m_factors,
+                               m_varcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
-                                  m_fields[i]->UpdatePhys());
+                              m_fields[i]->UpdatePhys());
     }
 }
-}
+} // namespace Nektar

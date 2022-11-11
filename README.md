@@ -34,7 +34,7 @@ where $`\psi`$ and $`T`$ respectively are the test function and the temperature.
 
 
 ## Installation and dependencies
-The Nektar-diffusion proxy-app should be compiled against Nektar++ v5.0.3. This can be done by either using pre-compiled binary packages or compiling it from source. Alternatively a Dockerfile image can be generated which includes Nektar++, the nektar-diffusion proxy-app and the included examples.
+The Nektar-diffusion proxy-app should be compiled against Nektar++ v5.2.0. This can be done by either using pre-compiled binary packages or compiling it from source. Alternatively a Dockerfile image can be generated which includes Nektar++, the nektar-diffusion proxy-app and the included examples.
 
 ### Docker
 To use the docker image, clone the nektar-diffusion repository and, from the top directory, build the image using
@@ -49,7 +49,7 @@ docker run -it nektar-diffusion /bin/bash
 ### Using Nektar++ binary packages
 Install CMake using your normal package management tools.
 
-Install the v5.0.3 `libnektar++-dev` or `libnektar++-devel` package (as appropriate), following instructions at https://www.nektar.info.
+Install the v5.2.0 `libnektar++-dev` or `libnektar++-devel` package (as appropriate), following instructions at https://www.nektar.info.
 
 Then compile the nektar-diffusion solver using
 ```bash
@@ -59,11 +59,11 @@ make install
 ```
 
 ### Using Nektar++ source code
-Download the source code for Nektar++ v5.0.3
+Download the source code for Nektar++ v5.2.0
 ```bash
 git clone https://gitlab.nektar.info/nektar/nektar
 cd nektar
-git checkout v5.0.3
+git checkout v5.2.0
 ```
 Compile it following the instructions at [https://www.nektar.info](https://www.nektar.info). To save time, set NEKTAR_BUILD_SOLVERS=OFF and NEKTAR_BUILD_DEMOS=OFF. Many of the dependencies are available as pre-built packages in most Linux distributions (e.g. Boost, TinyXML, Scotch, BLAS, LAPACK). It is recommended to turn on the NEKTAR_USE_MPI option to enable parallel execution. Run `make install` to collate the binaries and library files under the `dist` sub-directory and (optionally) set CMAKE_INSTALL_PREFIX to your preferred install location. To check Nektar++ is built correctly run `ctest`.
 
@@ -81,7 +81,7 @@ If the compilation fails, check the possible broken links during the configurati
 
 If an error was observed during installation, take note the description of this error and identify which program causes it. For example, if it is related to *mpi*, double check the possible broken links of mpi during configuration or verify the working condition of the pre-installed *mpi* on the cluster. In addition, the installed programs should be compatible with the version of `Nektar++`. The full list of the compatible versions of program can be found in the [user-guide](https://www.nektar.info/getting-started/documentation/).
 
-If some testing cases fail during *ctest*, check the log files in the **$HOME/nektar-v5.0.2/build/Testing/Temporary/** folder and identify the origin of the error.
+If some testing cases fail during *ctest*, check the log files in the **$HOME/nektar-v5.2.0/build/Testing/Temporary/** folder and identify the origin of the error.
 
 ## Execution
 If Nektar++ has been compiled from source, it is convenient to add the location of the binary files to the system PATH:
