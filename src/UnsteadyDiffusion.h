@@ -75,8 +75,8 @@ protected:
     UnsteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
                       const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject(bool DeclareField = true);
-    virtual void v_GenerateSummary(SummaryList &s);
+    virtual void v_InitObject(bool DeclareField = true) override;
+    virtual void v_GenerateSummary(SummaryList &s) override;
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
