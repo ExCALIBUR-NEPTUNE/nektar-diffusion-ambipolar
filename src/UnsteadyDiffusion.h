@@ -35,8 +35,8 @@
 #ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYDIFFUSION_H
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYDIFFUSION_H
 
-#include <SolverUtils/UnsteadySystem.h>
 #include <SolverUtils/Diffusion/Diffusion.h>
+#include <SolverUtils/UnsteadySystem.h>
 
 using namespace Nektar::SolverUtils;
 
@@ -49,11 +49,12 @@ public:
 
     /// Creates an instance of this class
     static EquationSystemSharedPtr create(
-        const LibUtilities::SessionReaderSharedPtr& pSession,
-        const SpatialDomains::MeshGraphSharedPtr& pGraph)
+        const LibUtilities::SessionReaderSharedPtr &pSession,
+        const SpatialDomains::MeshGraphSharedPtr &pGraph)
     {
-        EquationSystemSharedPtr p = MemoryManager<UnsteadyDiffusion>
-            ::AllocateSharedPtr(pSession, pGraph);
+        EquationSystemSharedPtr p =
+            MemoryManager<UnsteadyDiffusion>::AllocateSharedPtr(pSession,
+                                                                pGraph);
         p->InitObject();
         return p;
     }
@@ -65,38 +66,36 @@ public:
 
 protected:
     bool m_useSpecVanVisc;
-    NekDouble m_sVVCutoffRatio;   // cut off ratio from which to start decayhing modes
-    NekDouble m_sVVDiffCoeff;     // Diffusion coefficient of SVV modes
-    SolverUtils::DiffusionSharedPtr         m_diffusion;
-    SolverUtils::RiemannSolverSharedPtr     m_riemannSolver;
+    NekDouble
+        m_sVVCutoffRatio; // cut off ratio from which to start decayhing modes
+    NekDouble m_sVVDiffCoeff; // Diffusion coefficient of SVV modes
+    SolverUtils::DiffusionSharedPtr m_diffusion;
+    SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
     virtual void v_GenerateSummary(SummaryList &s);
 
-    UnsteadyDiffusion(
-        const LibUtilities::SessionReaderSharedPtr& pSession,
-        const SpatialDomains::MeshGraphSharedPtr& pGraph);
+    UnsteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
+                      const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
     virtual void v_InitObject();
 
     void DoOdeProjection(
-        const Array<OneD, const Array<OneD, NekDouble> > &inarray,
-              Array<OneD,       Array<OneD, NekDouble> > &outarray,
-        const NekDouble time);
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
     void DoImplicitSolve(
-        const Array<OneD, const Array<OneD, NekDouble> >&inarray,
-              Array<OneD,       Array<OneD, NekDouble> >&outarray,
-        NekDouble time,
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, NekDouble time,
         NekDouble lambda);
 
-    private:
-        NekDouble m_kperp;
-        NekDouble m_kpar;
-        NekDouble m_theta;
-        NekDouble m_n;
-        NekDouble m_epsilon;
-        StdRegions::VarCoeffMap m_varcoeff;
-        StdRegions::ConstFactorMap m_factors;
-    };
-}
+private:
+    NekDouble m_kperp;
+    NekDouble m_kpar;
+    NekDouble m_theta;
+    NekDouble m_n;
+    NekDouble m_epsilon;
+    StdRegions::VarCoeffMap m_varcoeff;
+    StdRegions::ConstFactorMap m_factors;
+};
+} // namespace Nektar
 
 #endif

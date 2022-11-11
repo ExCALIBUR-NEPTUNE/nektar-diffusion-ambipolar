@@ -28,15 +28,16 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Steady diffusion with a non-constant magnetic field solve routines
+// Description: Steady diffusion with a non-constant magnetic field solve
+// routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "SteadyDiffusionVaryingB.h"
-#include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <LibUtilities/BasicUtils/SessionReader.h>
-#include <iostream>
+#include <LibUtilities/TimeIntegration/TimeIntegrationScheme.h>
 #include <iomanip>
+#include <iostream>
 
 #include <boost/core/ignore_unused.hpp>
 
@@ -45,12 +46,13 @@ using namespace std;
 namespace Nektar
 {
 
-string SteadyDiffusionVaryingB::className = GetEquationSystemFactory().
-    RegisterCreatorFunction("SteadyDiffusionVaryingB", SteadyDiffusionVaryingB::create);
+string SteadyDiffusionVaryingB::className =
+    GetEquationSystemFactory().RegisterCreatorFunction(
+        "SteadyDiffusionVaryingB", SteadyDiffusionVaryingB::create);
 
 SteadyDiffusionVaryingB::SteadyDiffusionVaryingB(
-    const LibUtilities::SessionReaderSharedPtr& pSession,
-    const SpatialDomains::MeshGraphSharedPtr& pGraph)
+    const LibUtilities::SessionReaderSharedPtr &pSession,
+    const SpatialDomains::MeshGraphSharedPtr &pGraph)
     : EquationSystem(pSession, pGraph)
 {
 }
@@ -63,7 +65,7 @@ void SteadyDiffusionVaryingB::v_InitObject()
     EquationSystem::v_InitObject();
 
     int npoints = m_fields[0]->GetNpoints();
-    Array<OneD,NekDouble>  xc0,xc1,xc2;
+    Array<OneD, NekDouble> xc0, xc1, xc2;
 
     Array<OneD, NekDouble> xc(npoints), yc(npoints);
     m_fields[0]->GetCoords(xc, yc);
@@ -72,49 +74,52 @@ void SteadyDiffusionVaryingB::v_InitObject()
     nq = m_fields[0]->GetNpoints();
 
     // Set up variable coefficients
-    //GetFunction("d00")->Evaluate(m_session->GetVariables(), m_fields);
-    //GetFunction("d01")->Evaluate(m_session->GetVariables(), m_fields);
-    //GetFunction("d11")->Evaluate(m_session->GetVariables(), m_fields);
+    // GetFunction("d00")->Evaluate(m_session->GetVariables(), m_fields);
+    // GetFunction("d01")->Evaluate(m_session->GetVariables(), m_fields);
+    // GetFunction("d11")->Evaluate(m_session->GetVariables(), m_fields);
 
     //----------------------------------------------
     // Set up variable coefficients if defined
 
     coordim = m_fields[0]->GetCoordim(0);
-    xc0 = Array<OneD,NekDouble>(nq,0.0);
-    xc1 = Array<OneD,NekDouble>(nq,0.0);
-    xc2 = Array<OneD,NekDouble>(nq,0.0);
+    xc0     = Array<OneD, NekDouble>(nq, 0.0);
+    xc1     = Array<OneD, NekDouble>(nq, 0.0);
+    xc2     = Array<OneD, NekDouble>(nq, 0.0);
 
-    switch(coordim)
+    switch (coordim)
     {
-    case 2:
-        m_fields[0]->GetCoords(xc0,xc1);
-        break;
-    case 3:
-        m_fields[0]->GetCoords(xc0,xc1,xc2);
-        break;
-    default:
-        ASSERTL0(false,"Coordim not valid");
-        break;
+        case 2:
+            m_fields[0]->GetCoords(xc0, xc1);
+            break;
+        case 3:
+            m_fields[0]->GetCoords(xc0, xc1, xc2);
+            break;
+        default:
+            ASSERTL0(false, "Coordim not valid");
+            break;
     }
 
     if (m_session->DefinesFunction("d00"))
     {
-        Array<OneD, NekDouble> d00(nq,0.0);
-        LibUtilities::EquationSharedPtr d00func = m_session->GetFunction("d00",0);
+        Array<OneD, NekDouble> d00(nq, 0.0);
+        LibUtilities::EquationSharedPtr d00func =
+            m_session->GetFunction("d00", 0);
         d00func->Evaluate(xc0, xc1, xc2, d00);
         m_varcoeff[StdRegions::eVarCoeffD00] = d00;
     }
     if (m_session->DefinesFunction("d01"))
     {
-        Array<OneD, NekDouble> d01(nq,0.0);
-        LibUtilities::EquationSharedPtr d01func = m_session->GetFunction("d01",0);
+        Array<OneD, NekDouble> d01(nq, 0.0);
+        LibUtilities::EquationSharedPtr d01func =
+            m_session->GetFunction("d01", 0);
         d01func->Evaluate(xc0, xc1, xc2, d01);
         m_varcoeff[StdRegions::eVarCoeffD01] = d01;
     }
     if (m_session->DefinesFunction("d11"))
     {
-        Array<OneD, NekDouble> d11(nq,0.0);
-        LibUtilities::EquationSharedPtr d11func = m_session->GetFunction("d11",0);
+        Array<OneD, NekDouble> d11(nq, 0.0);
+        LibUtilities::EquationSharedPtr d11func =
+            m_session->GetFunction("d11", 0);
         d11func->Evaluate(xc0, xc1, xc2, d11);
         m_varcoeff[StdRegions::eVarCoeffD11] = d11;
     }
@@ -131,7 +136,7 @@ SteadyDiffusionVaryingB::~SteadyDiffusionVaryingB()
 {
 }
 
-void SteadyDiffusionVaryingB::v_GenerateSummary(SummaryList& s)
+void SteadyDiffusionVaryingB::v_GenerateSummary(SummaryList &s)
 {
     EquationSystem::v_GenerateSummary(s);
 }
@@ -151,11 +156,10 @@ void SteadyDiffusionVaryingB::v_DoSolve()
 
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                               m_fields[i]->UpdateCoeffs(),
-                               factors,
+                               m_fields[i]->UpdateCoeffs(), factors,
                                m_varcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
                               m_fields[i]->UpdatePhys());
     }
 }
-}
+} // namespace Nektar
