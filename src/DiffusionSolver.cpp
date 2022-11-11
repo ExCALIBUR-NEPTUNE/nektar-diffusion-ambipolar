@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File: DriftWaveSolver.cpp
+// File: DriftDiffusionSolver.cpp
 //
 // For more information, please see: http://www.nektar.info
 //

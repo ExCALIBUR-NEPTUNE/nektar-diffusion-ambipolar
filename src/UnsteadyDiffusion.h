@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File UnsteadyDiffusion.h
+// File: UnsteadyDiffusion.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -67,17 +67,16 @@ public:
 protected:
     bool m_useSpecVanVisc;
     NekDouble
-        m_sVVCutoffRatio; // cut off ratio from which to start decayhing modes
+        m_sVVCutoffRatio; // Cut-off ratio from which to start decaying modes
     NekDouble m_sVVDiffCoeff; // Diffusion coefficient of SVV modes
     SolverUtils::DiffusionSharedPtr m_diffusion;
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
-    virtual void v_GenerateSummary(SummaryList &s);
-
     UnsteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
                       const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject();
+    virtual void v_InitObject(bool DeclareField = true);
+    virtual void v_GenerateSummary(SummaryList &s);
 
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,

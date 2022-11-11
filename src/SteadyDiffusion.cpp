@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusion.cpp
+// File: SteadyDiffusion.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,7 +28,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Unsteady diffusion solve routines
+// Description: Steady diffusion solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -56,11 +56,11 @@ SteadyDiffusion::SteadyDiffusion(
 }
 
 /**
- * @brief Initialisation object for the unsteady diffusion problem.
+ * @brief Initialisation object for the steady diffusion problem.
  */
-void SteadyDiffusion::v_InitObject()
+void SteadyDiffusion::v_InitObject(bool DeclareField)
 {
-    EquationSystem::v_InitObject();
+    EquationSystem::v_InitObject(DeclareField);
 
     m_session->LoadParameter("k_par", m_kpar, 100.0);
     m_session->LoadParameter("k_perp", m_kperp, 1.0);
@@ -85,7 +85,7 @@ void SteadyDiffusion::v_InitObject()
     if (xmlCol)
     {
         const char *defaultImpl    = xmlCol->Attribute("DEFAULT");
-        const std::string collinfo = string(defaultImpl);
+        const std::string collinfo = defaultImpl ? string(defaultImpl) : "";
         if (collinfo != "MatrixFree")
         {
             int nq = m_fields[0]->GetNpoints();
@@ -119,7 +119,7 @@ void SteadyDiffusion::v_InitObject()
 }
 
 /**
- * @brief Unsteady diffusion problem destructor.
+ * @brief Steady diffusion problem destructor.
  */
 SteadyDiffusion::~SteadyDiffusion()
 {
@@ -131,7 +131,7 @@ void SteadyDiffusion::v_GenerateSummary(SummaryList &s)
 }
 
 /**
- * @brief Implicit solution of the unsteady diffusion problem.
+ * @brief Implicit solution of the steady diffusion problem.
  */
 void SteadyDiffusion::v_DoSolve()
 {

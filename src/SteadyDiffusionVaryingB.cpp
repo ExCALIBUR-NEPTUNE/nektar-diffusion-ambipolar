@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusionVaryingB.cpp
+// File: SteadyDiffusionVaryingB.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -60,26 +60,21 @@ SteadyDiffusionVaryingB::SteadyDiffusionVaryingB(
 /**
  * @brief Initialisation object for the steady diffusion problem.
  */
-void SteadyDiffusionVaryingB::v_InitObject()
+void SteadyDiffusionVaryingB::v_InitObject(bool DeclareField)
 {
     EquationSystem::v_InitObject();
 
-    int npoints = m_fields[0]->GetNpoints();
-    Array<OneD, NekDouble> xc0, xc1, xc2;
-
-    Array<OneD, NekDouble> xc(npoints), yc(npoints);
-    m_fields[0]->GetCoords(xc, yc);
-
     int nq, coordim;
     nq = m_fields[0]->GetNpoints();
+    Array<OneD, NekDouble> xc0, xc1, xc2;
+    Array<OneD, NekDouble> xc(nq), yc(nq);
+    m_fields[0]->GetCoords(xc, yc);
 
-    // Set up variable coefficients
-    // GetFunction("d00")->Evaluate(m_session->GetVariables(), m_fields);
-    // GetFunction("d01")->Evaluate(m_session->GetVariables(), m_fields);
-    // GetFunction("d11")->Evaluate(m_session->GetVariables(), m_fields);
 
     //----------------------------------------------
     // Set up variable coefficients if defined
+
+    m_factors[StdRegions::eFactorLambda] = 0.0;
 
     coordim = m_fields[0]->GetCoordim(0);
     xc0     = Array<OneD, NekDouble>(nq, 0.0);
@@ -146,9 +141,6 @@ void SteadyDiffusionVaryingB::v_GenerateSummary(SummaryList &s)
  */
 void SteadyDiffusionVaryingB::v_DoSolve()
 {
-    StdRegions::ConstFactorMap factors;
-    factors[StdRegions::eFactorLambda] = 0.0;
-
     for (int i = 0; i < m_fields.size(); ++i)
     {
         Vmath::Zero(m_fields[i]->GetNcoeffs(), m_fields[i]->UpdateCoeffs(), 1);
@@ -156,7 +148,7 @@ void SteadyDiffusionVaryingB::v_DoSolve()
 
         // Solve a system of equations with Helmholtz solver
         m_fields[i]->HelmSolve(m_fields[i]->GetPhys(),
-                               m_fields[i]->UpdateCoeffs(), factors,
+                               m_fields[i]->UpdateCoeffs(), m_factors,
                                m_varcoeff);
         m_fields[i]->BwdTrans(m_fields[i]->GetCoeffs(),
                               m_fields[i]->UpdatePhys());

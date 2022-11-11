@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusion.h
+// File: SteadyDiffusion.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -28,7 +28,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
-// Description: Unsteady diffusion solve routines
+// Description: Steady diffusion solve routines
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -67,7 +67,7 @@ protected:
     SteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
                     const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject();
+    virtual void v_InitObject(bool DeclareField = true);
     virtual void v_GenerateSummary(SolverUtils::SummaryList &s);
     virtual void v_DoSolve();
 

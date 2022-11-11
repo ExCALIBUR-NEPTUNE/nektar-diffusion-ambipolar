@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File UnsteadyDiffusion.cpp
+// File: UnsteadyDiffusion.cpp
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -44,7 +44,6 @@ using namespace std;
 
 namespace Nektar
 {
-
 string UnsteadyDiffusion::className =
     GetEquationSystemFactory().RegisterCreatorFunction(
         "UnsteadyDiffusion", UnsteadyDiffusion::create);
@@ -59,9 +58,9 @@ UnsteadyDiffusion::UnsteadyDiffusion(
 /**
  * @brief Initialisation object for the unsteady diffusion problem.
  */
-void UnsteadyDiffusion::v_InitObject()
+void UnsteadyDiffusion::v_InitObject(bool DeclareField)
 {
-    UnsteadySystem::v_InitObject();
+    UnsteadySystem::v_InitObject(DeclareField);
 
     m_session->MatchSolverInfo("SpectralVanishingViscosity", "True",
                                m_useSpecVanVisc, false);
@@ -108,7 +107,7 @@ void UnsteadyDiffusion::v_InitObject()
     if (xmlCol)
     {
         const char *defaultImpl    = xmlCol->Attribute("DEFAULT");
-        const std::string collinfo = string(defaultImpl);
+        const std::string collinfo = defaultImpl ? string(defaultImpl) : "";
         if (collinfo != "MatrixFree")
         {
             int nq = m_fields[0]->GetNpoints();
@@ -182,7 +181,7 @@ void UnsteadyDiffusion::DoOdeProjection(
     for (i = 0; i < nvariables; ++i)
     {
         m_fields[i]->FwdTrans(inarray[i], coeffs);
-        m_fields[i]->BwdTrans_IterPerExp(coeffs, outarray[i]);
+        m_fields[i]->BwdTrans(coeffs, outarray[i]);
     }
 }
 
@@ -196,16 +195,14 @@ void UnsteadyDiffusion::DoImplicitSolve(
 {
     boost::ignore_unused(time);
 
-    StdRegions::ConstFactorMap factors;
-
-    int nvariables                     = inarray.size();
-    int npoints                        = m_fields[0]->GetNpoints();
-    factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsilon;
+    int nvariables                       = inarray.size();
+    int npoints                          = m_fields[0]->GetNpoints();
+    m_factors[StdRegions::eFactorLambda] = 1.0 / lambda / m_epsilon;
 
     if (m_useSpecVanVisc)
     {
-        factors[StdRegions::eFactorSVVCutoffRatio] = m_sVVCutoffRatio;
-        factors[StdRegions::eFactorSVVDiffCoeff]   = m_sVVDiffCoeff / m_epsilon;
+        m_factors[StdRegions::eFactorSVVCutoffRatio] = m_sVVCutoffRatio;
+        m_factors[StdRegions::eFactorSVVDiffCoeff]   = m_sVVDiffCoeff / m_epsilon;
     }
 
     // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
@@ -227,5 +224,4 @@ void UnsteadyDiffusion::DoImplicitSolve(
         m_fields[i]->SetPhysState(false);
     }
 }
-
 } // namespace Nektar

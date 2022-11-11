@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// File SteadyDiffusionVaryingB.h
+// File: SteadyDiffusionVaryingB.h
 //
 // For more information, please see: http://www.nektar.info
 //
@@ -43,7 +43,6 @@ using namespace Nektar::SolverUtils;
 
 namespace Nektar
 {
-
 class SteadyDiffusionVaryingB : public EquationSystem
 {
 public:
@@ -71,12 +70,13 @@ protected:
         const LibUtilities::SessionReaderSharedPtr &pSession,
         const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
-    virtual void v_InitObject();
+    virtual void v_InitObject(bool DeclareField = true);
     virtual void v_GenerateSummary(SolverUtils::SummaryList &s);
     virtual void v_DoSolve();
 
 private:
     StdRegions::VarCoeffMap m_varcoeff;
+    StdRegions::ConstFactorMap m_factors;
 };
 } // namespace Nektar
 
