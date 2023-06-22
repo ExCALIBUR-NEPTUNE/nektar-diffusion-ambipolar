@@ -78,6 +78,9 @@ protected:
     virtual void v_InitObject(bool DeclareField = true) override;
     virtual void v_GenerateSummary(SummaryList &s) override;
 
+    void DoOdeRhs(
+        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -94,6 +97,7 @@ private:
     NekDouble m_epsilon;
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::ConstFactorMap m_factors;
+    Array<OneD, NekDouble> m_source ;
 };
 } // namespace Nektar
 

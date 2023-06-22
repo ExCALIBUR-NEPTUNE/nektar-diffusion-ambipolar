@@ -136,9 +136,52 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
         m_varcoeff[StdRegions::eVarCoeffD11] = Array<OneD, NekDouble>(nq, d11);
     }
 
+    // Override previous setup if a magnetic field is defined
+    if (m_session->DefinesFunction("MagneticField"))
+    {
+        Array<OneD, Array<OneD, NekDouble>> dummy;
+        dummy = Array<OneD, Array<OneD, NekDouble>>(3);
+
+        Array<OneD, NekDouble> d00(npoints, 1.0);
+        Array<OneD, NekDouble> d11(npoints, 1.0);
+        Array<OneD, NekDouble> d01(npoints, 0.0);
+
+        std::vector<std::string> B;
+        B.push_back("Bx");
+        B.push_back("By");
+        B.push_back("Bz");
+        B.resize(3);
+        
+        GetFunction("MagneticField")->Evaluate(B, dummy);
+        for (int k = 0; k < npoints ; k++)
+        {
+            d00[k] = (m_kpar - m_kperp) * dummy[0][k]*dummy[0][k] + m_kperp;
+            d01[k] = (m_kpar - m_kperp) * dummy[0][k]*dummy[1][k];
+            d11[k] = (m_kpar - m_kperp) * dummy[1][k]*dummy[1][k] + m_kperp;
+        }
+        m_varcoeff[StdRegions::eVarCoeffD00] = d00;
+        m_varcoeff[StdRegions::eVarCoeffD01] = d01;
+        m_varcoeff[StdRegions::eVarCoeffD11] = d11;
+    }
+
+    m_source = Array<OneD, NekDouble>(npoints, 0.0);
+    // Define source term if any
+    if (m_session->DefinesFunction("Source"))
+    {
+        Array<OneD, NekDouble> zc(npoints, 0.0);
+        LibUtilities::EquationSharedPtr source =
+            m_session->GetFunction("Source", 0);
+        source->Evaluate(xc, yc, zc, m_source);
+    }
+
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
              "Only continuous Galerkin discretisation supported.");
 
+    if (m_session->MatchSolverInfo("TimeIntegrationMethod", "IMEXOrder3"))
+    {
+        m_ode.DefineOdeRhs(&UnsteadyDiffusion::DoOdeRhs, this);
+        m_ode.DefineProjection(&UnsteadyDiffusion::DoOdeProjection, this);
+    }
     m_ode.DefineImplicitSolve(&UnsteadyDiffusion::DoImplicitSolve, this);
 }
 
@@ -159,6 +202,30 @@ void UnsteadyDiffusion::v_GenerateSummary(SummaryList &s)
            << ", coeff = " << m_sVVDiffCoeff << ")";
         AddSummaryItem(s, "Smoothing", ss.str());
     }
+}
+
+/**
+ * @brief Compute the right-hand side for the unsteady diffusion
+ * problem.
+ *
+ * @param inarray    Given fields.
+ * @param outarray   Calculated solution.
+ * @param time       Time.
+ */
+void UnsteadyDiffusion::DoOdeRhs(
+    const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+    Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time)
+{
+    int nq = m_fields[0]->GetNpoints();
+
+    // RHS should be set to zero.
+    for (int i = 0; i < outarray.size(); ++i)
+    {
+        Vmath::Zero(nq, &outarray[i][0], 1);
+    }
+
+    // Add source term S to N.
+    Vmath::Vadd(nq, m_source, 1, outarray[0], 1, outarray[0], 1);
 }
 
 /**
