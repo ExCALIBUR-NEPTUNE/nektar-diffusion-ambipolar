@@ -30,7 +30,7 @@ The variational formulation of the two-dimensional anisotropic thermal conductio
 
 ![Variational formulation](/readme/equation.jpg)
 
-where $`\psi`$ and $`T`$ respectively are the test function and the temperature. $`\bm{\kappa}_c`$ is the anisotropic thermal conductivity tensor and $`Q`$ represents the heat source in field. $`\bm{n}`$ is the outward normal vector along the boundaries of the domain.
+where $`\psi`$ and $`T`$ respectively are the test function and the temperature. $`\mathbf{\kappa}_c`$ is the anisotropic thermal conductivity tensor and $`Q`$ represents the heat source in field. $`\mathbf{n}`$ is the outward normal vector along the boundaries of the domain.
 
 
 ## Installation and dependencies
@@ -133,6 +133,9 @@ The key parameters to set up the simulation are listed below:
 | :---      | :---        |
 | theta | angle of magnetic field  |
 | B | magnitude of magnetic field |
+| k_par | thermal conductivity parallel to magnetic field |
+| k_perp | thermal conductivity perpendicular to magnetic field |
+| epsilon | diffusion coefficient |
 | A = m_i/m_p | ratio between masses of ions and proton |
 | Z | ion charge state |
 | lambda | Coulomb logarithm |
