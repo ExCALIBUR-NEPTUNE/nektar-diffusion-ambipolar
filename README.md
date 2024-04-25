@@ -21,7 +21,8 @@
   * [Execution](#execution)
   * [Parameters](#parameters)
   * [Examples](#examples)
-    *[Unsteady Ring](#unsteady-ring)
+    * [Unsteady Ring](#unsteady-ring)
+    * [MAST-U](#mast-u)
   * [References](#references)
   * [License](#license)
 
@@ -174,6 +175,17 @@ Shown below is the system at an early stage
 
 Shown below is the system at a later stage
 ![System at an evolved state](/readme/evolved.png)
+
+### MAST-U
+The second example is a poloidal section through the MAST-U device, using the magnetic field given in the file `B.pts`.  The heat diffusion is again isotropic, favouring the magnetic field direction.
+
+For the boundary conditions, the core region is held at a high temperature `TCore`, and the outer region at a low temperature (300 and 0 respectively for these images).  Currently the domain does not have axial symmetry, so does not completely represent the true scenario.
+
+Shown below is the system at an early stage
+![System at an early state](/readme/mast-early.png)
+
+Shown below is the system at a later stage
+![System at an evolved state](/readme/mast-evolved.png)
 
 ## References
 
