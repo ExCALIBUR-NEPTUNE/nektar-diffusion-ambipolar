@@ -20,6 +20,8 @@
     * [Using Nektar++ source code](#using-nektar-source-code)
   * [Execution](#execution)
   * [Parameters](#parameters)
+  * [Examples](#examples)
+    *[Unsteady Ring](#unsteady-ring)
   * [References](#references)
   * [License](#license)
 
@@ -147,7 +149,31 @@ The key parameters to set up the simulation are listed below:
 
 Typically the angle and magnitude of the magnetic field should be specified a prior. The angle is measured with respect to the positive $`x`$ axis in the clock-wise direction. Particularly, the magnitude of the magnetic field impose influences on the thermal diffusivity perpendicular to the magnetic field line. In an unsteady simulation, The values of TimeStep and NumSteps respectively are the time step size in numerical integration and the total number of the time steps. The value of IO_CheckSteps is used to control the ouptut frequency with respect to the time steps.
 
+## Examples
+Two examples are provided:
 
+### Unsteady Ring
+This example has initial conditions of a heat sink with a Gaussian shape on one side of an annular domain; an equal heat sink is on the opposite side of the annulus.  A magnetic field circulates around the void.  The thermal conductivity along the magnetic field lines is much greater than the conductivity perpendicular to the field lines.  The function describing the sources and sinks is (in Cartesian coordinates):
+
+$$\dot{T} = k_{\parallel}\left(e^{-\frac{(x-x_c-x_s)^2}{{l_s}^2}-\frac{(y-y_c-y_s)^2}{{l_s}^2}}
+                                - e^{-\frac{(x-x_c+x_s)^2}{{l_s}^2}-\frac{(y-y_c-y_s)^2}{{l_s}^2}}\right)$$
+
+where $`(x_c,y_c)`$ are the coordinates of the centre and $`(x_s,y_s)`$ are the coordinates of the centre of the Gaussian relative to the centre.
+Meanwhile the magnetic field is given by:
+
+$$ B_x =\frac{y-y_c}{\sqrt{(x-x_c)^2+(y-y_c)^2}} $$
+
+$$ B_y =-\frac{x-x_c}{\sqrt{(x-x_c)^2+(y-y_c)^2}} $$
+
+$$ B_z =0 $$
+
+The domain is subject to Dirichlet boundary conditions $`T=0`$ outside  and inside the annular region.
+
+Shown below is the system at an early stage
+![System at an early state](/readme/early.png)
+
+Shown below is the system at a later stage
+![System at an evolved state](/readme/evolved.png)
 
 ## References
 
