@@ -34,6 +34,8 @@ ADD_EXECUTABLE(DiffusionSolver
     src/UnsteadyDiffusion.cpp
     src/SteadyDiffusion.cpp
     src/SteadyDiffusionVaryingB.cpp
+    src/BoundaryConditions/DiffBndCond.cpp
+    src/BoundaryConditions/ObliqueBC.cpp
     )
 
 # Add target link libraries.

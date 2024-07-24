@@ -139,8 +139,7 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
     // Override previous setup if a magnetic field is defined
     if (m_session->DefinesFunction("MagneticField"))
     {
-        Array<OneD, Array<OneD, NekDouble>> dummy;
-        dummy = Array<OneD, Array<OneD, NekDouble>>(3);
+        m_mag = Array<OneD, Array<OneD, NekDouble>>(3);
 
         Array<OneD, NekDouble> d00(npoints, 1.0);
         Array<OneD, NekDouble> d11(npoints, 1.0);
@@ -151,13 +150,13 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
         B.push_back("By");
         B.push_back("Bz");
         B.resize(3);
-        
-        GetFunction("MagneticField")->Evaluate(B, dummy);
-        for (int k = 0; k < npoints ; k++)
+
+        GetFunction("MagneticField")->Evaluate(B, m_mag);
+        for (int k = 0; k < npoints; k++)
         {
-            d00[k] = (m_kpar - m_kperp) * dummy[0][k]*dummy[0][k] + m_kperp;
-            d01[k] = (m_kpar - m_kperp) * dummy[0][k]*dummy[1][k];
-            d11[k] = (m_kpar - m_kperp) * dummy[1][k]*dummy[1][k] + m_kperp;
+            d00[k] = (m_kpar - m_kperp) * m_mag[0][k] * m_mag[0][k] + m_kperp;
+            d01[k] = (m_kpar - m_kperp) * m_mag[0][k] * m_mag[1][k];
+            d11[k] = (m_kpar - m_kperp) * m_mag[1][k] * m_mag[1][k] + m_kperp;
         }
         m_varcoeff[StdRegions::eVarCoeffD00] = d00;
         m_varcoeff[StdRegions::eVarCoeffD01] = d01;
@@ -175,7 +174,7 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
     }
 
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
-             "Only continuous Galerkin discretisation supported.");
+              "Only continuous Galerkin discretisation supported.");
 
     if (m_session->MatchSolverInfo("TimeIntegrationMethod", "IMEXOrder3"))
     {
@@ -183,6 +182,55 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
         m_ode.DefineProjection(&UnsteadyDiffusion::DoOdeProjection, this);
     }
     m_ode.DefineImplicitSolve(&UnsteadyDiffusion::DoImplicitSolve, this);
+
+    // User-defined boundary conditions
+
+    for (size_t i = 0; i < m_fields.size(); ++i)
+    {
+        bool Set = false;
+        Array<OneD, const SpatialDomains::BoundaryConditionShPtr> BndConds;
+        Array<OneD, MultiRegions::ExpListSharedPtr> BndExp;
+        size_t cnt = 0;
+        BndConds   = m_fields[i]->GetBndConditions();
+        BndExp     = m_fields[i]->GetBndCondExpansions();
+
+        for (size_t n = 0; n < BndConds.size(); ++n)
+        {
+            std::string type =
+                m_fields[0]->GetBndConditions()[n]->GetUserDefined();
+            if (type.rfind("Oblique", 0) == 0)
+            {
+                ASSERTL0(
+                    BndConds[n]->GetBoundaryConditionType() ==
+                        SpatialDomains::eRobin,
+                    "Oblique boundary condition must be of type Robin <R>");
+                std::string::size_type indxBeg = type.find_first_of(':') + 1;
+                std::string fieldcomps = type.substr(indxBeg, string::npos);
+                if (!Set)
+                {
+                    m_fields[i]->GetBoundaryToElmtMap(m_fieldsBCToElmtID[i],
+                                                      m_fieldsBCToTraceID[i]);
+                    Set = true;
+                }
+            }
+            if (m_fields[0]
+                    ->GetBndConditions()[n]
+                    ->GetBoundaryConditionType() == SpatialDomains::ePeriodic)
+            {
+                continue;
+            }
+
+            if (!type.empty())
+            {
+                m_bndConds.push_back(GetDiffBndCondFactory().CreateInstance(
+                    type, m_session, m_fields, m_traceNormals, m_mag, m_spacedim, n,
+                    cnt));
+            }
+            cnt += m_fields[i]->GetBndCondExpansions()[n]->GetExpSize();
+        }
+    }
+
+    SetBoundaryConditionsBwdWeight();
 }
 
 /**
@@ -241,7 +289,8 @@ void UnsteadyDiffusion::DoOdeProjection(
 {
     int i;
     int nvariables = inarray.size();
-    SetBoundaryConditions(time);
+
+    SetBoundaryConditions(outarray, time);
 
     Array<OneD, NekDouble> coeffs(m_fields[0]->GetNcoeffs());
 
@@ -269,7 +318,7 @@ void UnsteadyDiffusion::DoImplicitSolve(
     if (m_useSpecVanVisc)
     {
         m_factors[StdRegions::eFactorSVVCutoffRatio] = m_sVVCutoffRatio;
-        m_factors[StdRegions::eFactorSVVDiffCoeff]   = m_sVVDiffCoeff / m_epsilon;
+        m_factors[StdRegions::eFactorSVVDiffCoeff] = m_sVVDiffCoeff / m_epsilon;
     }
 
     // We solve ( \nabla^2 - HHlambda ) Y[i] = rhs [i]
@@ -291,4 +340,47 @@ void UnsteadyDiffusion::DoImplicitSolve(
         m_fields[i]->SetPhysState(false);
     }
 }
+
+void UnsteadyDiffusion::SetBoundaryConditions(
+    Array<OneD, Array<OneD, NekDouble>> &physarray, NekDouble time)
+{
+    size_t nTracePts  = GetTraceTotPoints();
+    size_t nvariables = physarray.size();
+
+    Array<OneD, Array<OneD, NekDouble>> Fwd(nvariables);
+    for (size_t i = 0; i < nvariables; ++i)
+    {
+        Fwd[i] = Array<OneD, NekDouble>(nTracePts);
+        m_fields[i]->ExtractTracePhys(physarray[i], Fwd[i]);
+    }
+
+    Array<OneD, Array<OneD, NekDouble>> FwdOblique(m_spacedim);
+    for (size_t d = 0; d < m_spacedim; ++d)
+    {
+        FwdOblique[d] = Array<OneD, NekDouble>(nTracePts);
+        m_fields[0]->ExtractTracePhys(m_mag[d], FwdOblique[d]);
+    }
+
+    if (!m_bndConds.empty())
+    {
+        // Loop over user-defined boundary conditions
+        for (auto &x : m_bndConds)
+        {
+            x->Apply(Fwd, FwdOblique, physarray, time);
+        }
+    }
+}
+
+void UnsteadyDiffusion::SetBoundaryConditionsBwdWeight()
+{
+    if (m_bndConds.size())
+    {
+        // Loop over user-defined boundary conditions
+        for (auto &x : m_bndConds)
+        {
+            x->ApplyBwdWeight();
+        }
+    }
+}
+
 } // namespace Nektar

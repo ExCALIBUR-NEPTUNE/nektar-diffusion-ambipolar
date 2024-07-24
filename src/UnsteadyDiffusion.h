@@ -35,6 +35,7 @@
 #ifndef NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYDIFFUSION_H
 #define NEKTAR_SOLVERS_ADRSOLVER_EQUATIONSYSTEMS_UNSTEADYDIFFUSION_H
 
+#include "BoundaryConditions/DiffBndCond.h"
 #include <SolverUtils/Diffusion/Diffusion.h>
 #include <SolverUtils/UnsteadySystem.h>
 
@@ -72,15 +73,20 @@ protected:
     SolverUtils::DiffusionSharedPtr m_diffusion;
     SolverUtils::RiemannSolverSharedPtr m_riemannSolver;
 
+    std::vector<DiffBndCondSharedPtr> m_bndConds;
+
+    Array<OneD, Array<OneD, int>> m_fieldsBCToElmtID;
+    Array<OneD, Array<OneD, int>> m_fieldsBCToTraceID;
+
     UnsteadyDiffusion(const LibUtilities::SessionReaderSharedPtr &pSession,
                       const SpatialDomains::MeshGraphSharedPtr &pGraph);
 
     virtual void v_InitObject(bool DeclareField = true) override;
     virtual void v_GenerateSummary(SummaryList &s) override;
 
-    void DoOdeRhs(
-        const Array<OneD, const Array<OneD, NekDouble>> &inarray,
-        Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
+    void DoOdeRhs(const Array<OneD, const Array<OneD, NekDouble>> &inarray,
+                  Array<OneD, Array<OneD, NekDouble>> &outarray,
+                  const NekDouble time);
     void DoOdeProjection(
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, const NekDouble time);
@@ -88,6 +94,11 @@ protected:
         const Array<OneD, const Array<OneD, NekDouble>> &inarray,
         Array<OneD, Array<OneD, NekDouble>> &outarray, NekDouble time,
         NekDouble lambda);
+
+    void SetBoundaryConditions(Array<OneD, Array<OneD, NekDouble>> &physarray,
+                               NekDouble time);
+
+    void SetBoundaryConditionsBwdWeight();
 
 private:
     NekDouble m_kperp;
@@ -97,7 +108,8 @@ private:
     NekDouble m_epsilon;
     StdRegions::VarCoeffMap m_varcoeff;
     StdRegions::ConstFactorMap m_factors;
-    Array<OneD, NekDouble> m_source ;
+    Array<OneD, NekDouble> m_source;
+    Array<OneD, Array<OneD, NekDouble>> m_mag;
 };
 } // namespace Nektar
 

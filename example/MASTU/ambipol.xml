@@ -46,23 +46,23 @@
             </REGION>
             <!--Lower outer -->
             <REGION REF="1">
-                <N VAR="T"     VALUE="0.0" />
-                <!--<R VAR="T"  VALUE="0.0" PRIMCOEFF="1.0/k_par"/>-->
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
             </REGION>
             <!--Upper outer -->
             <REGION REF="2">
-                <N VAR="T"     VALUE="0.0" />
-                <!--<R VAR="T"  VALUE="0.0" PRIMCOEFF="1.0/k_par"/>-->
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
             </REGION>
             <!--Upper inner -->
             <REGION REF="3">
-                <N VAR="T"     VALUE="0.0" />
-                <!--<R VAR="T"  VALUE="0.0" PRIMCOEFF="1.0/k_par"/>-->
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
             </REGION>
             <!--Lower inner -->
             <REGION REF="4">
-                <N VAR="T"     VALUE="0.0" />
-                <!--<R VAR="T"  VALUE="0.0" PRIMCOEFF="1.0/k_par"/>-->
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
             </REGION>
             <!--LFS SOL -->
             <REGION REF="5">
@@ -80,7 +80,7 @@
             <REGION REF="8">
                 <D VAR="T"    VALUE="0.0" />
             </REGION>
-        </BOUNDARYCONDITIONS>-->
+        </BOUNDARYCONDITIONS>
         
         <FUNCTION NAME="InitialConditions">
             <E VAR="T"    VALUE="1.0" />
