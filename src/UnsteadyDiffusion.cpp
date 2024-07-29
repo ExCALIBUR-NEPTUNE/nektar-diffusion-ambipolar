@@ -174,7 +174,7 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
     }
 
     ASSERTL0(m_projectionType == MultiRegions::eGalerkin,
-              "Only continuous Galerkin discretisation supported.");
+             "Only continuous Galerkin discretisation supported.");
 
     if (m_session->MatchSolverInfo("TimeIntegrationMethod", "IMEXOrder3"))
     {
@@ -222,9 +222,11 @@ void UnsteadyDiffusion::v_InitObject(bool DeclareField)
 
             if (!type.empty())
             {
+                Array<OneD, Array<OneD, NekDouble>> Normals;
+                m_fields[i]->GetBoundaryNormals(i, Normals);
                 m_bndConds.push_back(GetDiffBndCondFactory().CreateInstance(
-                    type, m_session, m_fields, m_traceNormals, m_mag, m_spacedim, n,
-                    cnt));
+                    type, m_session, m_fields, Normals, m_mag,
+                    m_spacedim, n, cnt));
             }
             cnt += m_fields[i]->GetBndCondExpansions()[n]->GetExpSize();
         }

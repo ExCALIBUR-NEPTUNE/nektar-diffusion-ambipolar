@@ -61,8 +61,7 @@ void ObliqueBC::v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
         for (i = 0; i < m_spacedim; ++i)
         {
             Vmath::Vvtvp(nBCEdgePts, &tmp[0], 1, &m_traceNormals[i][id2], 1,
-                         &FwdOblique[i][id2], 1, &B_par[i * nBCEdgePts +
-                         id2], 1);
+                         &FwdOblique[i][id2], 1, &B_par[i * nBCEdgePts], 1);
         }
 
         // Calculate grad(Fwd).B_par
@@ -72,7 +71,7 @@ void ObliqueBC::v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
             m_fields[0]
                 ->GetBndCondExpansions()[m_bcRegion]
                 ->GetExp(e)
-                ->PhysDirectionalDeriv(B_par, Fwd[i], FwdDeriv);
+                ->PhysDeriv_s(Fwd[i], FwdDeriv);
 
             // Copy boundary adjusted values into the boundary expansion
 
