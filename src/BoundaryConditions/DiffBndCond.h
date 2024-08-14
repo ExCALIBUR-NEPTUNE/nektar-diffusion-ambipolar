@@ -39,8 +39,7 @@ public:
     }
 
     /// Apply the boundary condition
-    void Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
-               Array<OneD, Array<OneD, NekDouble>> &FwdOblique,
+    void Apply(Array<OneD, Array<OneD, NekDouble>> &magnetic,
                Array<OneD, Array<OneD, NekDouble>> &physarray,
                const NekDouble &time = 0);
 
@@ -56,15 +55,13 @@ protected:
     /// Array of fields
     Array<OneD, MultiRegions::ExpListSharedPtr> m_fields;
     /// Trace normals
-    Array<OneD, Array<OneD, NekDouble>> m_traceNormals;
+    Array<OneD, Array<OneD, NekDouble>> m_normals;
     /// Oblique Field
     Array<OneD, Array<OneD, NekDouble>> m_obliqueField;
     /// Space dimension
     int m_spacedim;
     /// Weight for average calculation of diffusion term
     NekDouble m_diffusionAveWeight;
-
-    Array<OneD, NekDouble> m_velInf;
 
     /// Id of the boundary region
     int m_bcRegion;
@@ -78,8 +75,7 @@ protected:
                 const Array<OneD, Array<OneD, NekDouble>> &pObliqueField,
                 const int pSpaceDim, const int bcRegion, const int cnt);
 
-    virtual void v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
-                         Array<OneD, Array<OneD, NekDouble>> &FwdOblique,
+    virtual void v_Apply(Array<OneD, Array<OneD, NekDouble>> &FwdOblique,
                          Array<OneD, Array<OneD, NekDouble>> &physarray,
                          const NekDouble &time) = 0;
 

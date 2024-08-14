@@ -11,76 +11,78 @@ std::string ObliqueBC::className =
 
 ObliqueBC::ObliqueBC(const LibUtilities::SessionReaderSharedPtr &pSession,
                      const Array<OneD, MultiRegions::ExpListSharedPtr> &pFields,
-                     const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
+                     const Array<OneD, Array<OneD, NekDouble>> &pNormals,
                      const Array<OneD, Array<OneD, NekDouble>> &pObliqueField,
                      const int pSpaceDim, const int bcRegion, const int cnt)
-    : DiffBndCond(pSession, pFields, pTraceNormals, pObliqueField, pSpaceDim,
+    : DiffBndCond(pSession, pFields, pNormals, pObliqueField, pSpaceDim,
                   bcRegion, cnt)
 {
 }
 
-void ObliqueBC::v_Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
-                        Array<OneD, Array<OneD, NekDouble>> &FwdOblique,
+void ObliqueBC::v_Apply(Array<OneD, Array<OneD, NekDouble>> &magnetic,
                         Array<OneD, Array<OneD, NekDouble>> &physarray,
                         [[maybe_unused]] const NekDouble &time)
 {
-    int i;
-    int nVariables = physarray.size();
 
-    const Array<OneD, const int> &traceBndMap = m_fields[0]->GetTraceBndMap();
+    // Obtain boundary normals
+    Array<OneD, Array<OneD, NekDouble>> Normals(m_spacedim);
+    m_fields[0]->GetBoundaryNormals(m_bcRegion, Normals);
 
-    // Adjust the physical values of the trace to take
-    // user defined boundaries into account
-    int e, id1, id2, nBCEdgePts, eMax;
+    int nBCEdgePts =
+        m_fields[0]->GetBndCondExpansions()[m_bcRegion]->GetTotPoints();
 
-    eMax = m_fields[0]->GetBndCondExpansions()[m_bcRegion]->GetExpSize();
+    // Obtain magnetic field at boundary
+    Array<OneD, Array<OneD, NekDouble>> Bndmagnetic(m_spacedim);
 
-    for (e = 0; e < eMax; ++e)
+    for (int i = 0; i < m_spacedim; ++i)
     {
-        nBCEdgePts = m_fields[0]
-                         ->GetBndCondExpansions()[m_bcRegion]
-                         ->GetExp(e)
-                         ->GetTotPoints();
-        id1 =
-            m_fields[0]->GetBndCondExpansions()[m_bcRegion]->GetPhys_Offset(e);
-        id2 =
-            m_fields[0]->GetTrace()->GetPhys_Offset(traceBndMap[m_offset + e]);
+        Bndmagnetic[i] = Array<OneD, NekDouble>(nBCEdgePts, 0.0);
+        m_fields[0]->ExtractElmtToBndPhys(m_bcRegion, magnetic[i],
+                                          Bndmagnetic[i]);
+    }
 
-        // Calculate -(B.n) in tmp
-        Array<OneD, NekDouble> tmp(nBCEdgePts, 0.0);
+    for (int i = 0; i < physarray.size(); ++i)
+    {
+        // Obtain field derivative
+        Array<OneD, NekDouble> Deriv(m_spacedim * physarray[i].size(), 0.0);
+        m_fields[0]->GetBndCondExpansions()[m_bcRegion]->PhysDeriv(physarray[i],
+                                                                   Deriv);
 
-        for (i = 0; i < m_spacedim; ++i)
+        // Obtain field derivative at boundary
+        Array<OneD, NekDouble> BndDeriv(m_spacedim * nBCEdgePts, 0.0);
+        m_fields[0]->ExtractElmtToBndPhys(m_bcRegion, Deriv, BndDeriv);
+
+        // Calculate grad(T).B
+        Array<OneD, NekDouble> Result(nBCEdgePts, 0.0);
+        Array<OneD, NekDouble> NormDeriv(nBCEdgePts, 0.0);
+
+        for (int j = 0; j < m_spacedim; ++j)
         {
-            Vmath::Vvtvp(nBCEdgePts, &FwdOblique[i][id2], 1,
-                         &m_traceNormals[i][id2], 1, &tmp[0], 1, &tmp[0], 1);
+            Vmath::Vvtvp(nBCEdgePts, &BndDeriv[j * nBCEdgePts], 1,
+                         &Bndmagnetic[j][0], 1, &Result[0], 1, &Result[0], 1);
+                         Vmath::Vabs(nBCEdgePts,&Result[0], 1, &Result[0], 1);
+
         }
-        Vmath::Smul(nBCEdgePts, -1.0, &tmp[0], 1, &tmp[0], 1);
+        Vmath::Smul(nBCEdgePts, -1.0, &Result[0], 1, &Result[0], 1);
 
-        // Calculate B_par = B - (B.n)n
-        Array<OneD, NekDouble> B_par(m_spacedim * nBCEdgePts, 0.0);
-        for (i = 0; i < m_spacedim; ++i)
-        {
-            Vmath::Vvtvp(nBCEdgePts, &tmp[0], 1, &m_traceNormals[i][id2], 1,
-                         &FwdOblique[i][id2], 1, &B_par[i * nBCEdgePts], 1);
-        }
 
-        // Calculate grad(Fwd).B_par
-        for (i = 0; i < nVariables; ++i)
-        {
-            Array<OneD, NekDouble> FwdDeriv(nBCEdgePts);
-            m_fields[0]
-                ->GetBndCondExpansions()[m_bcRegion]
-                ->GetExp(e)
-                ->PhysDeriv_s(Fwd[i], FwdDeriv);
+        // Copy boundary adjusted values into the boundary expansion
+        int nbcoeffs =
+            m_fields[i]->GetBndCondExpansions()[m_bcRegion]->GetNcoeffs();
+        Array<OneD, NekDouble> bndCoeffs(nbcoeffs, 0.0);
 
-            // Copy boundary adjusted values into the boundary expansion
+        m_fields[i]->GetBndCondExpansions()[m_bcRegion]->IProductWRTBase(
+            Result, bndCoeffs);
 
-            Vmath::Vcopy(nBCEdgePts, &FwdDeriv[id2], 1,
-                         &(m_fields[i]
-                               ->GetBndCondExpansions()[m_bcRegion]
-                               ->UpdatePhys())[id1],
-                         1);
-        }
+
+        Vmath::Vadd(
+            nbcoeffs, &bndCoeffs[0], 1,
+            &(m_fields[i]->GetBndCondExpansions()[m_bcRegion]->GetCoeffs())[0],
+            1,
+            &(m_fields[i]
+                  ->GetBndCondExpansions()[m_bcRegion]
+                  ->UpdateCoeffs())[0],
+            1);
     }
 }
 

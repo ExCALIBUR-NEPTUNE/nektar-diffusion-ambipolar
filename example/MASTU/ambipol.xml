@@ -47,38 +47,46 @@
             <!--Lower outer -->
             <REGION REF="1">
                 <!-- <N VAR="T"     VALUE="0.0" /> -->
-                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/>
             </REGION>
             <!--Upper outer -->
             <REGION REF="2">
                 <!-- <N VAR="T"     VALUE="0.0" /> -->
-                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/>
             </REGION>
             <!--Upper inner -->
             <REGION REF="3">
                 <!-- <N VAR="T"     VALUE="0.0" /> -->
-                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/>
             </REGION>
             <!--Lower inner -->
             <REGION REF="4">
                 <!-- <N VAR="T"     VALUE="0.0" /> -->
-                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="1.0/k_par"/>
+                <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/>
             </REGION>
             <!--LFS SOL -->
             <REGION REF="5">
                 <D VAR="T"    VALUE="0.0" />
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <!-- <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/> -->
             </REGION>
             <!--HFS SOL -->
             <REGION REF="6">
                 <D VAR="T"    VALUE="0.0" />
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <!-- <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/> -->
             </REGION>
             <!--Bottom PFR -->
             <REGION REF="7">
                 <D VAR="T"    VALUE="0.0" />
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <!-- <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/> -->
             </REGION>
             <!--Top PFR -->
             <REGION REF="8">
                 <D VAR="T"    VALUE="0.0" />
+                <!-- <N VAR="T"     VALUE="0.0" /> -->
+                <!-- <R VAR="T" USERDEFINEDTYPE="Oblique" VALUE="0.0" PRIMCOEFF="0.0"/> -->
             </REGION>
         </BOUNDARYCONDITIONS>
         

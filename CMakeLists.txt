@@ -32,8 +32,6 @@ ENDIF (NEKTAR_BUILD_DOCS)
 ADD_EXECUTABLE(DiffusionSolver
     src/DiffusionSolver.cpp
     src/UnsteadyDiffusion.cpp
-    src/SteadyDiffusion.cpp
-    src/SteadyDiffusionVaryingB.cpp
     src/BoundaryConditions/DiffBndCond.cpp
     src/BoundaryConditions/ObliqueBC.cpp
     )

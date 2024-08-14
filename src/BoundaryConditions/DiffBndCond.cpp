@@ -16,21 +16,10 @@ DiffBndCond::DiffBndCond(
     const Array<OneD, Array<OneD, NekDouble>> &pTraceNormals,
     const Array<OneD, Array<OneD, NekDouble>> &pObliqueField,
     const int pSpaceDim, const int bcRegion, const int cnt)
-    : m_session(pSession), m_fields(pFields), m_traceNormals(pTraceNormals),
+    : m_session(pSession), m_fields(pFields), m_normals(pTraceNormals),
       m_obliqueField(pObliqueField), m_spacedim(pSpaceDim),
       m_bcRegion(bcRegion), m_offset(cnt)
 {
-    m_velInf = Array<OneD, NekDouble>(m_spacedim, 0.0);
-
-    if (m_spacedim >= 2)
-    {
-        m_session->LoadParameter("vInf", m_velInf[1], 0.0);
-    }
-    if (m_spacedim == 3)
-    {
-        m_session->LoadParameter("wInf", m_velInf[2], 0.0);
-    }
-
     m_diffusionAveWeight = 1.0;
 }
 
@@ -41,12 +30,11 @@ DiffBndCond::DiffBndCond(
  * @param   physarray
  * @param   time
  */
-void DiffBndCond::Apply(Array<OneD, Array<OneD, NekDouble>> &Fwd,
-                        Array<OneD, Array<OneD, NekDouble>> &FwdOblique,
+void DiffBndCond::Apply(Array<OneD, Array<OneD, NekDouble>> &magnetic,
                         Array<OneD, Array<OneD, NekDouble>> &physarray,
                         const NekDouble &time)
 {
-    v_Apply(Fwd, FwdOblique, physarray, time);
+    v_Apply(magnetic, physarray, time);
 }
 
 /**
